@@ -79,8 +79,6 @@ public class HomescreenFrame extends JFrame {
 	});
 	getContentPane().add(register, registerConstraints);
 
-	refreshButtons(new HashMap<>(), false);
-
 	pack();
     }
 
@@ -129,13 +127,41 @@ public class HomescreenFrame extends JFrame {
      * false
      */
     private boolean buttonExists(String withText) {
-	for(JButton button : currentButtons.keySet()) {
-	    if(button.getText().equals(withText)) {
+	for (JButton button : currentButtons.keySet()) {
+	    if (button.getText().equals(withText)) {
 		resetButtonTimer(button);
 		return true;
 	    }
 	}
 	return false;
+    }
+
+    public void addButton(String studentName, String macAddress) {
+
+	if (currentButtons == null) {
+	    currentButtons = new HashMap<>();
+	}
+
+	if(!buttonExists(studentName)) {
+	    JButton button = new JButton();
+	    button.setText(studentName);
+	    GridBagConstraints buttonConstraints = getButtonConstraints();
+
+	    button.addActionListener(new AbstractAction() {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		    uiManager.resetHomescreenTimer();
+		    uiManager.showScheduleFrame(studentName, macAddress);
+		}
+	    });
+	    addButton(button, buttonConstraints);
+	}
+
+	revalidate();
+	repaint();
+
     }
 
     /**
@@ -146,7 +172,7 @@ public class HomescreenFrame extends JFrame {
      * @param constraints de Constraints die o.a. aangeven op welke plaats in
      * het scherm de knop weergegeven moet worden
      */
-    public void addButton(JButton button, GridBagConstraints constraints) {
+    private void addButton(JButton button, GridBagConstraints constraints) {
 	getContentPane().add(button, constraints);
 	currentButtons.put(button, getNewButtonTimerTask(button));
     }

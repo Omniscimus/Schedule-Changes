@@ -1,8 +1,6 @@
 package net.omniscimus.profielwerkstuk.ui;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -11,7 +9,7 @@ import net.omniscimus.profielwerkstuk.MACAddressListener;
 
 /**
  * Listener die nieuwe gedetecteerde devices weergeeft in de User Interface.
- * 
+ *
  * @author omniscimus
  */
 public class UIListener implements MACAddressListener {
@@ -21,7 +19,7 @@ public class UIListener implements MACAddressListener {
 
     /**
      * Maakt een nieuwe UIListener.
-     * 
+     *
      * @param rw de basis van dit programma
      * @param uiManager de UIManager die deze Listener controleert
      */
@@ -30,33 +28,26 @@ public class UIListener implements MACAddressListener {
 	this.uiManager = uiManager;
     }
 
-    /**
-     * Geeft de gedetecteerde devices weer op het correcte frame.
-     * 
-     * @param ipToMAC een Map met als Key het IP-adres van de device en als
-     * Value het MAC-adres
-     */
     @Override
-    public void onMACAddressesUpdate(Map<String, String> ipToMAC) {
+    public void onMACAddressUpdate(String ip, String mac) {
 
-	// Lookup if that MAC address is in the database
-	// If so, display the leerling's name
-	// If not, put it in a list which will be displayed if the leerling clicks Register
+	// Check of het MAC-adres in de database staat.
+	// Als dat zo is, zet dan de naam van de leerling op het scherm;
+	// Als dat niet zo is, zet hem dan in de lijst met adressen die
+	// weergegeven worden in het RegisterFrame.
 	JFrame currentFrame = uiManager.getCurrentFrame();
 
 	if (currentFrame instanceof RegisterFrame) {
-	    ((RegisterFrame) currentFrame).refreshButtons(ipToMAC);
+	    ((RegisterFrame) currentFrame).addButton(ip, mac);
 	} else if (currentFrame instanceof HomescreenFrame) {
-	    Map<String, String> namesToMACAddresses = new HashMap<>();
-	    ipToMAC.values().stream().forEach((mac) -> {
-		try {
-		    namesToMACAddresses.put(rw.getMySQLManager().getDatabaseLink().getNameByMACAddress(mac), mac);
-		} catch (SQLException | ClassNotFoundException ex) {
-		    Logger.getLogger(Roosterwijzigingen.class.getName()).log(
-		    Level.SEVERE, "Fout tijdens het verbinden met MySQL", ex);
+	    try {
+		String studentName = rw.getMySQLManager().getDatabaseLink().getNameByMACAddress(mac);
+		if (studentName != null) {
+		    ((HomescreenFrame) currentFrame).addButton(studentName, mac);
 		}
-	    });
-	    ((HomescreenFrame) currentFrame).refreshButtons(namesToMACAddresses, true);
+	    } catch (SQLException | ClassNotFoundException ex) {
+		Logger.getLogger(UIListener.class.getName()).log(Level.SEVERE, null, ex);
+	    }
 	}
 
     }

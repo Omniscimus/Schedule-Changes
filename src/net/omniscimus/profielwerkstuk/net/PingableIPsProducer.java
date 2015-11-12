@@ -35,6 +35,7 @@ public class PingableIPsProducer implements Runnable {
 		    try {
 			hostIP = InetAddress.getByAddress(remoteHostIPBytes);
 			pingManager.getPingQueue().put(hostIP);
+			System.out.println("IP queued: " + hostIP.getHostName());
 		    } catch (UnknownHostException | InterruptedException ex) {
 			Logger.getLogger(PingableIPsProducer.class.getName()).log(Level.SEVERE, null, ex);
 		    }

@@ -17,7 +17,7 @@ public class PingManager {
 	this.networkManager = networkManager;
     }
 
-    private final BlockingQueue<InetAddress> pingQueue = new ArrayBlockingQueue<>(256);
+    private final BlockingQueue<InetAddress> pingQueue = new ArrayBlockingQueue<>(3);
 
     BlockingQueue<InetAddress> getPingQueue() {
 	return pingQueue;

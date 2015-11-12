@@ -26,8 +26,11 @@ public class PingableIPsConsumer implements Runnable {
 	while (true) {
 	    try {
 		InetAddress ipToPing = pingManager.getPingQueue().take();
+		System.out.println("IP taken: " + ipToPing.getHostName());
 		HostPinger pinger = new HostPinger(ipToPing, ConfigValueCache.getPingTimeout());
 		pingerPool.execute(pinger);
+		// This is not good, maybe try CompletionService
+		Thread.sleep(ConfigValueCache.getPingTimeout());
 	    } catch (InterruptedException ex) {
 		Logger.getLogger(PingableIPsConsumer.class.getName()).log(Level.SEVERE, null, ex);
 	    }

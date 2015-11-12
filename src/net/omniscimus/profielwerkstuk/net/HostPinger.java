@@ -2,16 +2,16 @@ package net.omniscimus.profielwerkstuk.net;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.omniscimus.profielwerkstuk.EventAnnouncer;
 import net.omniscimus.profielwerkstuk.text.CommandOutputProcessor;
 
 /**
  *
  * @author omniscimus
  */
-public class HostPinger implements Runnable {
+public class HostPinger implements Callable<String> {
 
     private final InetAddress ipToPing;
     private final int timeout;
@@ -22,16 +22,17 @@ public class HostPinger implements Runnable {
     }
 
     @Override
-    public final void run() {
+    public final String call() {
 	try {
 	    if (ipToPing.isReachable(timeout)) {
 		String hostname = ipToPing.getHostName();
 		String macAddress = CommandOutputProcessor.getMACAddressByIP(hostname);
-		EventAnnouncer.detectedMACAddress(hostname, macAddress);
+		return macAddress;
 	    }
 	} catch (IOException ex) {
 	    Logger.getLogger(HostPinger.class.getName()).log(Level.SEVERE, null, ex);
 	}
+	return null;
     }
 
 }

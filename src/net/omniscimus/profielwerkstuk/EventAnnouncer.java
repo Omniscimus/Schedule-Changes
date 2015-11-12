@@ -46,10 +46,17 @@ public class EventAnnouncer {
      * @param ipToMAC een Map met als Key het IP-adres en als Value het
      * MAC-adres van de gedetecteerde device
      */
-    public static void detectedMACAddressesUpdateEvent(Map<String, String> ipToMAC) {
+    /*public static void detectedMACAddressesUpdateEvent(Map<String, String> ipToMAC) {
+     if (macListeners != null) {
+     macListeners.stream().forEach((listener) -> {
+     listener.onMACAddressesUpdate(ipToMAC);
+     });
+     }
+     }*/
+    public static void detectedMACAddress(String ip, String mac) {
 	if (macListeners != null) {
 	    macListeners.stream().forEach((listener) -> {
-		listener.onMACAddressesUpdate(ipToMAC);
+		listener.onMACAddressUpdate(ip, mac);
 	    });
 	}
     }

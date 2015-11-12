@@ -17,6 +17,7 @@ public interface MACAddressListener {
      * @param ipToMAC een Map met als Key het IP-adres van de device en als
      * Value het MAC-adres
      */
-    public void onMACAddressesUpdate(Map<String, String> ipToMAC);
+    //public void onMACAddressesUpdate(Map<String, String> ipToMAC);
+    public void onMACAddressUpdate(String ip, String mac);
 
 }

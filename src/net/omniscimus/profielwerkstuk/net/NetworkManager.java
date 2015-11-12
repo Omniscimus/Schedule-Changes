@@ -9,68 +9,63 @@ import net.omniscimus.profielwerkstuk.configuration.ConfigValueCache;
 
 /**
  * Manager voor het hotspot netwerk.
+ *
  * @author omniscimus
  */
 public class NetworkManager {
-    
+
     private final Roosterwijzigingen roosterwijzigingen;
-    
+
     /**
      * Maakt een nieuwe NetworkManager.
-     * 
+     *
      * @param roosterwijzigingen de basis van dit programma
      */
     public NetworkManager(Roosterwijzigingen roosterwijzigingen) {
 	this.roosterwijzigingen = roosterwijzigingen;
     }
-    
-    private ScanScheduler scanScheduler;
+
+    private PingManager pingManager;
     private NetworkInterface hotspotInterface;
     private InetAddress hotspotIP;
-    
-    /**
-     * Geef de ScanScheduler waarmee scan taken gepland kunnen worden.
-     * @return de ScanScheduler die bij deze NetworkManager hoort
-     */
-    public ScanScheduler getScanScheduler() {
-	return scanScheduler;
-    }
-    
+
     /**
      * Geef het IP-adres van de WiFi hotspot.
+     *
      * @return het InetAddress van de WiFi hotspot
      */
     public InetAddress getHotspotIP() {
 	return hotspotIP;
     }
-    
+
     /**
-     * Laadt de hotspot implementatie.
+     * Laadt de hotspot implementatie en start ping scans.
      */
     public void load() {
-	
-	if(!reloadHotspotInterface()) {
+
+	if (!reloadHotspotInterface()) {
 	    roosterwijzigingen.crash("Kon de interface van de hotspot niet vinden! (" + ConfigValueCache.getHotspotInterface() + ")");
 	}
 	reloadHotspotIP();
-	
-	scanScheduler = new ScanScheduler(hotspotIP);
-	scanScheduler.load();
-	
+
+	pingManager = new PingManager(this);
+	pingManager.startPinging();
+
     }
-    
+
     /**
      * Zoekt de Network Interface uit de config op.
+     *
      * @return false als de interface niet geüpdate kon worden
      */
     public boolean reloadHotspotInterface() {
-	
+
 	String requiredHotspotInterface = ConfigValueCache.getHotspotInterface();
 	try {
 	    Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-	    while(networkInterfaces.hasMoreElements()) {
+	    while (networkInterfaces.hasMoreElements()) {
 		NetworkInterface ni = networkInterfaces.nextElement();
-		if(ni.getName().equals(requiredHotspotInterface)) {
+		if (ni.getName().equals(requiredHotspotInterface)) {
 		    hotspotInterface = ni;
 		    return true;
 		}
@@ -79,23 +74,23 @@ public class NetworkManager {
 	    return false;
 	}
 	return false;
-	
+
     }
-    
+
     /**
      * Zoekt het IP van het hotspot network op.
      */
     public void reloadHotspotIP() {
-	
+
 	Enumeration<InetAddress> hotspotIPs = hotspotInterface.getInetAddresses();
-	while(hotspotIPs.hasMoreElements()) {
+	while (hotspotIPs.hasMoreElements()) {
 	    InetAddress ip = hotspotIPs.nextElement();
-	    if(!ip.isAnyLocalAddress() && ip.isSiteLocalAddress()) {
+	    if (!ip.isAnyLocalAddress() && ip.isSiteLocalAddress()) {
 		hotspotIP = ip;
 		break;
 	    }
 	}
-	
+
     }
-    
+
 }

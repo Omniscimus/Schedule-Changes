@@ -1,0 +1,27 @@
+# Dit is het configuratiebestand van het Roosterwijzigingen programma.
+
+# Welke Network Interface fungeert als hotspot?
+# voorbeelden hiervan zijn: eth0, p2p, wlan0, en0, awdl0
+hotspot-interface: en0
+
+# Hoeveel tijd, in milliseconden, moet er gewacht worden tussen elke
+# netwerkscan? Als dit teveel tijd is, detecteert het programma minder snel
+# nieuwe mobieltjes. Als dit korter is dan de tijd van een totale scan, lopen de
+# scans over elkaar heen.
+scan-delay: 2000
+
+# Hoeveel tijd, in milliseconden, moet er gewacht worden op een respons van
+# ieder mobieltje bij een scan? Er worden iedere scan 255 ports gepingt, dus een
+# scan zal maximaal 255 * timeout milliseconden duren. De totale tijd van een
+# scan moet minder zijn dan (of gelijk zijn aan) scan-delay.
+ping-timeout: 1000
+
+# Hoe lang, in seconden, moet er gewacht worden tot er teruggeschakeld wordt
+# naar het Home scherm, na de laatste gebruikersinteractie?
+interaction-timeout: 30
+
+# MySQL-verbinding gegevens
+mysql-hostname: localhost
+mysql-port: 3306
+mysql-username: root
+mysql-password: 

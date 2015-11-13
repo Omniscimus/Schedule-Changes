@@ -1,10 +1,8 @@
 package net.omniscimus.profielwerkstuk.text;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import net.omniscimus.profielwerkstuk.Roosterwijzigingen;
 
 /**
  * Opslagplaats voor roosterwijzigingen.
@@ -20,8 +18,6 @@ public class ScheduleChangesCache {
     protected ScheduleChangesCache() {
 
     }
-
-    private static ArrayList<String> possibleSchoolClasses;
 
     // <classes,<changes>>
     private final Map<String, ArrayList<String>> scheduleChanges = new HashMap<>();
@@ -70,24 +66,6 @@ public class ScheduleChangesCache {
      */
     public ArrayList<String> getScheduleChangesByClass(String schoolClass) {
 	return scheduleChanges.get(schoolClass);
-    }
-
-    /**
-     * Geeft of een bepaalde klas bestaat volgens de schooldatabase.
-     *
-     * @param schoolClass de klas die opgezocht moet worden
-     * @return true als de klas bestaat; anders false
-     */
-    public static boolean schoolClassExists(String schoolClass) {
-	try {
-	    if (possibleSchoolClasses == null) {
-		possibleSchoolClasses = Roosterwijzigingen.rw
-			.getMySQLManager().getSchoolSQL().getAllSchoolClasses();
-	    }
-	    return possibleSchoolClasses.contains(schoolClass);
-	} catch (SQLException | ClassNotFoundException e) {
-	    return false;
-	}
     }
 
 }

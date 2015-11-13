@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -20,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
+import net.omniscimus.profielwerkstuk.text.CacheManager;
 
 /**
  * Het frame met de gepersonaliseerde roosterwijzigingen van een bepaalde
@@ -72,7 +72,7 @@ public class ScheduleFrame extends JFrame {
     private JLabel generalTitle;
     private JPanel generalContainer;
     private JLabel title;
-    private JPanel container;
+    private JPanel specificContainer;
 
     /**
      * Zet de benodigde componenten op het frame.<br>
@@ -159,14 +159,14 @@ public class ScheduleFrame extends JFrame {
 	titleConstraints.weightx = 2;
 	getContentPane().add(title, titleConstraints);
 
-	container = new JPanel();
-	container.setBackground(Color.WHITE);
-	container.setLayout(new GridBagLayout());
-	container.setBorder(containerBorder);
+	specificContainer = new JPanel();
+	specificContainer.setBackground(Color.WHITE);
+	specificContainer.setLayout(new GridBagLayout());
+	specificContainer.setBorder(containerBorder);
 	GridBagConstraints containerConstraints = new GridBagConstraints();
 	containerConstraints.gridy = 5;
 	containerConstraints.weightx = 2;
-	getContentPane().add(container, containerConstraints);
+	getContentPane().add(specificContainer, containerConstraints);
 
 	switchDay(true, false);
 	pack();
@@ -203,32 +203,37 @@ public class ScheduleFrame extends JFrame {
 	title.setText("Roosterwijzigingen voor " + identity);
 
 	generalContainer.removeAll();
-	ArrayList<String> generalChanges = uiManager.getRoosterwijzigingen().getFileManager()
-		.getScheduleCache(today).getGeneralChanges();
-	generalChanges.stream().map((change) -> {
-	    JLabel changeLabel = new JLabel();
-	    changeLabel.setText(change);
-	    return changeLabel;
-	}).map((changeLabel) -> {
-	    changeLabel.setFont(new Font("Courier New", Font.BOLD, 14));
-	    return changeLabel;
-	}).forEach((changeLabel) -> {
-	    GridBagConstraints changeLabelConstraints = new GridBagConstraints();
-	    changeLabelConstraints.gridy = getGeneralRow();
-	    changeLabelConstraints.anchor = GridBagConstraints.WEST;
-	    generalContainer.add(changeLabel, changeLabelConstraints);
-	});
+	specificContainer.removeAll();
 
-	container.removeAll();
-	List<String> changes = uiManager.getRoosterwijzigingen().getFileManager().getFileReader().getScheduleChanges(macAddress, today);
-	if (changes != null) {
-	    if (changes.isEmpty()) {
-		JLabel emptyLabel = new JLabel();
-		emptyLabel.setText("Geen persoonlijke roosterwijzigingen!");
-		emptyLabel.setFont(new Font("Courier New", Font.BOLD, 14));
-		container.add(emptyLabel);
+	CacheManager cacheManager = uiManager.getRoosterwijzigingen()
+		.getFileManager().getCacheManager();
+	if (cacheManager.scheduleCacheIsAvailable(today)) {
+
+	    ArrayList<String> generalChanges = cacheManager.getGeneralScheduleChanges(today);
+	    if (!generalChanges.isEmpty()) {
+		generalChanges.stream().map((change) -> {
+		    JLabel changeLabel = new JLabel();
+		    changeLabel.setText(change);
+		    return changeLabel;
+		}).map((changeLabel) -> {
+		    changeLabel.setFont(new Font("Courier New", Font.BOLD, 14));
+		    return changeLabel;
+		}).forEach((changeLabel) -> {
+		    GridBagConstraints changeLabelConstraints = new GridBagConstraints();
+		    changeLabelConstraints.gridy = getGeneralRow();
+		    changeLabelConstraints.anchor = GridBagConstraints.WEST;
+		    generalContainer.add(changeLabel, changeLabelConstraints);
+		});
 	    } else {
-		changes.stream().map((change) -> {
+		JLabel emptyLabel = new JLabel();
+		emptyLabel.setText("Geen algemene roosterwijzigingen!");
+		emptyLabel.setFont(new Font("Courier New", Font.BOLD, 14));
+		generalContainer.add(emptyLabel);
+	    }
+
+	    ArrayList<String> specificChanges = cacheManager.getSpecificScheduleChanges(macAddress, today);
+	    if (!specificChanges.isEmpty()) {
+		specificChanges.stream().map((change) -> {
 		    JLabel changeLabel = new JLabel();
 		    changeLabel.setText(change);
 		    changeLabel.setFont(new Font("Courier New", Font.BOLD, 14));
@@ -237,20 +242,30 @@ public class ScheduleFrame extends JFrame {
 		    GridBagConstraints changeLabelConstraints = new GridBagConstraints();
 		    changeLabelConstraints.gridy = getRow();
 		    changeLabelConstraints.anchor = GridBagConstraints.WEST;
-		    container.add(changeLabel, changeLabelConstraints);
+		    specificContainer.add(changeLabel, changeLabelConstraints);
 		});
+	    } else {
+		JLabel emptyLabel = new JLabel();
+		emptyLabel.setText("Geen persoonlijke roosterwijzigingen!");
+		emptyLabel.setFont(new Font("Courier New", Font.BOLD, 14));
+		specificContainer.add(emptyLabel);
 	    }
+
 	} else {
 	    JLabel notAvailableLabel = new JLabel();
 	    notAvailableLabel.setText((today) ? "De roosterwijzigingen van vandaag zijn nog niet beschikbaar!" : "De roosterwijzigingen van morgen zijn nog niet beschikbaar!");
 	    notAvailableLabel.setFont(new Font("Courier New", Font.BOLD, 14));
-	    container.add(notAvailableLabel);
+	    generalContainer.add(notAvailableLabel);
+	    specificContainer.add(notAvailableLabel);
 	}
 
-	switchDay.setText((today) ? "Wijzigingen voor morgen" : "Wijzigingen voor vandaag");
-	for (ActionListener listener : switchDay.getActionListeners()) {
+	switchDay.setText(
+		(today) ? "Wijzigingen voor morgen" : "Wijzigingen voor vandaag");
+	for (ActionListener listener
+		: switchDay.getActionListeners()) {
 	    switchDay.removeActionListener(listener);
 	}
+
 	switchDay.addActionListener(new AbstractAction() {
 	    private static final long serialVersionUID = 1L;
 
@@ -263,7 +278,8 @@ public class ScheduleFrame extends JFrame {
 		    Logger.getLogger(ScheduleFrame.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	    }
-	});
+	}
+	);
 
 	if (repack) {
 	    revalidate();

@@ -1,4 +1,4 @@
-package net.omniscimus.profielwerkstuk.text;
+package net.omniscimus.profielwerkstuk.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;

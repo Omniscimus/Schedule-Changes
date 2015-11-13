@@ -55,6 +55,16 @@ public class FileFetcher extends TimerTask {
 
     }
 
+    /**
+     * Geeft het nummer van de dag van de week dat gebruikt kan worden om
+     * Calendar.get(Calendar.DAY_OF_WEEK) waarden te converteren naar DayOfWeek
+     * waarden.
+     *
+     * @param dayOfWeekFromCalendar het nummer van de dag van de week, zoals
+     * gegeven door Calendar.get(Calendar.DAY_OF_WEEK)
+     * @return het nummer van de dag van de week, te gebruiken voor
+     * DayOfWeek.of(int)
+     */
     private int dayOfWeekNumber(int dayOfWeekFromCalendar) {
 	if (dayOfWeekFromCalendar == 0) {
 	    return 7;
@@ -74,7 +84,8 @@ public class FileFetcher extends TimerTask {
      * @param fileToProcess het te verwerken HTML-bestand
      * @param today true als het om de roosterwijzigingen van vandaag gaat;
      * anders false
-     * @throws IOException
+     * @throws IOException als het bestand met roosterwijzigingen niet geopend
+     * kon worden
      */
     public void processFile(File fileToProcess, boolean today) throws IOException {
 	if (fileToProcess != null) {
@@ -83,7 +94,7 @@ public class FileFetcher extends TimerTask {
 		    ConfigValueCache.getSaveFolderPath() + File.separator
 		    + todaysFileName.substring(0, todaysFileName.length() - 4) + ".txt");
 	    NehalenniaFileProcessor.processFile(fileToProcess.toPath(), processedFile.toPath());
-	    downloadScheduler.getFileReader().writeChangesToCache(processedFile, today);
+	    downloadScheduler.getFileManager().getFileReader().writeChangesToCache(processedFile, today);
 	}
     }
 

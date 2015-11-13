@@ -9,7 +9,7 @@ import net.omniscimus.profielwerkstuk.configuration.ConfigurationManager;
 import net.omniscimus.profielwerkstuk.mysql.MySQLManager;
 import net.omniscimus.profielwerkstuk.net.NetworkManager;
 import net.omniscimus.profielwerkstuk.ui.UIManager;
-import net.omniscimus.profielwerkstuk.text.DownloadScheduler;
+import net.omniscimus.profielwerkstuk.text.FileManager;
 
 /**
  * Main class voor dit project.
@@ -19,7 +19,7 @@ import net.omniscimus.profielwerkstuk.text.DownloadScheduler;
 public class Roosterwijzigingen {
 
     private ConfigurationManager configurationManager;
-    private DownloadScheduler downloadScheduler;
+    private FileManager fileManager;
     private MySQLManager mySQLManager;
     private NetworkManager networkManager;
     private UIManager uiManager;
@@ -34,8 +34,8 @@ public class Roosterwijzigingen {
      *
      * @return de DownloadScheduler die dit programma gebruikt
      */
-    public DownloadScheduler getFileManager() {
-	return downloadScheduler;
+    public FileManager getFileManager() {
+	return fileManager;
     }
 
     /**
@@ -83,8 +83,8 @@ public class Roosterwijzigingen {
 	}
 
 	// Start een scheduler die elk uur kijkt of er een nieuw bestand is op de server
-	downloadScheduler = new DownloadScheduler(this);
-	downloadScheduler.startScheduling();
+	fileManager = new FileManager(this);
+	fileManager.load();
 
 	// Start de User Interface.
 	uiManager = new UIManager(this);

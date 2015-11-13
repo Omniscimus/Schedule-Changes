@@ -28,6 +28,8 @@ public class SchoolSQL {
 	this.mySQLManager = mySQLManager;
     }
 
+    private ArrayList<String> possibleSchoolClasses;
+
     /**
      * Zoekt de leerlingnummers op die horen bij de opgegeven voor- en
      * achternaam.
@@ -159,6 +161,24 @@ public class SchoolSQL {
 	return klassen;
 
 	// SELECT DISTINCT klas FROM school.klassen;
+    }
+
+    /**
+     * Geeft of een bepaalde klas bestaat volgens de schooldatabase.
+     *
+     * @param schoolClass de klas die opgezocht moet worden
+     * @return true als de klas bestaat en er geen fout optreedt tijdens een
+     * eventuele MySQL query; anders false
+     */
+    public boolean schoolClassExists(String schoolClass) {
+	try {
+	    if (possibleSchoolClasses == null) {
+		possibleSchoolClasses = getAllSchoolClasses();
+	    }
+	    return possibleSchoolClasses.contains(schoolClass);
+	} catch (SQLException | ClassNotFoundException e) {
+	    return false;
+	}
     }
 
 }

@@ -2,12 +2,10 @@ package net.omniscimus.profielwerkstuk.text;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import net.omniscimus.profielwerkstuk.Roosterwijzigingen;
+import net.omniscimus.profielwerkstuk.mysql.SchoolSQL;
 
 /**
  * Deze class kan een verwerkt bestand met roosterwijzigingen (dus NIET een HTML
@@ -17,59 +15,16 @@ import net.omniscimus.profielwerkstuk.Roosterwijzigingen;
  */
 public class NehalenniaFileReader {
 
-    private final Roosterwijzigingen rw;
-    private final DownloadScheduler downloadScheduler;
+    private final CacheManager cacheManager;
 
     /**
      * Maakt een nieuwe NehalenniaFileReader.
      *
-     * @param rw de basis van dit programma
-     * @param downloadScheduler de Downloads manager
+     * @param cacheManager de class waarin de roosterwijzigingen worden
+     * opgeslagen
      */
-    public NehalenniaFileReader(Roosterwijzigingen rw, DownloadScheduler downloadScheduler) {
-	this.rw = rw;
-	this.downloadScheduler = downloadScheduler;
-    }
-
-    /**
-     * Geeft een lijst met roosterwijzigingen, gefilterd voor de persoon met het
-     * gegeven MAC-adres.
-     *
-     * @param macAddress het MAC-adres van de persoon van wie de
-     * roosterwijzigingen opgezocht moeten worden
-     * @param today true als het om de roosterwijzigingen van vandaag gaat;
-     * false als het om de roosterwijzigingen van de volgende schooldag
-     * @return een lijst met roosterwijzigingen, of null als de
-     * roosterwijzigingen voor de gespecifieerde dag niet beschikbaar zijn
-     * @throws SQLException als er geen toegang tot de database verkregen kon
-     * worden
-     * @throws ClassNotFoundException als het stuurprogramma voor de MySQL
-     * server niet gevonden kon worden
-     */
-    public ArrayList<String> getScheduleChanges(String macAddress, boolean today)
-	    throws SQLException, ClassNotFoundException {
-
-	ScheduleChangesCache cacheToUse = downloadScheduler.getScheduleCache(today);
-	if (cacheToUse != null) {
-	    ArrayList<String> schoolClasses
-		    = rw.getMySQLManager().getDatabaseLink()
-		    .getSchoolClassesByMACAddress(macAddress);
-
-	    ArrayList<String> scheduleChanges = new ArrayList<>();
-	    schoolClasses.stream().map((schoolClass)
-		    -> cacheToUse
-		    .getScheduleChangesByClass(schoolClass)).forEach((classChanges) -> {
-			if (classChanges != null) {
-			    classChanges.stream().forEach((change) -> {
-				scheduleChanges.add(change);
-			    });
-			}
-		    });
-
-	    return scheduleChanges;
-	} else {
-	    return null;
-	}
+    public NehalenniaFileReader(CacheManager cacheManager) {
+	this.cacheManager = cacheManager;
     }
 
     /**
@@ -87,6 +42,8 @@ public class NehalenniaFileReader {
 
 	Stream<String> lines = NehalenniaFileProcessor.fileAsLinesStream(fileToRead.toPath(), "UTF-8");
 
+	SchoolSQL sqlAccess = cacheManager.getRoosterwijzigingen()
+		.getMySQLManager().getSchoolSQL();
 	Pattern classPattern = Pattern.compile("^\\S+");
 	lines.forEach((line) -> {
 	    Matcher classMatcher = classPattern.matcher(line);
@@ -95,11 +52,11 @@ public class NehalenniaFileReader {
 		// spatie, het is een speciale Unicode char die het programma
 		// van de roostermaakster blijkbaar gebruikt ipv de spatie...
 		String schoolClass = classMatcher.group().replaceAll(" ", "");
-		ScheduleChangesCache cacheToWrite = downloadScheduler.getScheduleCache(today);
-		if(cacheToWrite == null) {
-		    cacheToWrite = downloadScheduler.createScheduleChangesCache(today);
+		ScheduleChangesCache cacheToWrite = cacheManager.getScheduleCache(today);
+		if (cacheToWrite == null) {
+		    cacheToWrite = cacheManager.createScheduleChangesCache(today);
 		}
-		if (ScheduleChangesCache.schoolClassExists(schoolClass)) {
+		if (sqlAccess.schoolClassExists(schoolClass)) {
 		    cacheToWrite.store(schoolClass, line);
 		} else {
 		    cacheToWrite.store(line);

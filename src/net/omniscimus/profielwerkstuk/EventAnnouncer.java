@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.omniscimus.profielwerkstuk.text.CommandOutputProcessor;
+import net.omniscimus.profielwerkstuk.util.CommandOutputProcessor;
 
 /**
  * Verspreidt bepaalde gebeurtenissen in het programma naar de juiste Listeners.

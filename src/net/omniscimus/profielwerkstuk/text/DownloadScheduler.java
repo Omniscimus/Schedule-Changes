@@ -2,7 +2,6 @@ package net.omniscimus.profielwerkstuk.text;
 
 import java.util.Calendar;
 import java.util.Timer;
-import net.omniscimus.profielwerkstuk.Roosterwijzigingen;
 
 /**
  * Manager voor de uurlijkse download van het nieuwe bestand met
@@ -12,61 +11,24 @@ import net.omniscimus.profielwerkstuk.Roosterwijzigingen;
  */
 public class DownloadScheduler {
 
-    private final NehalenniaFileReader fileReader;
-    private ScheduleChangesCache todayCache;
-    private ScheduleChangesCache tomorrowCache;
+    private final FileManager fileManager;
 
     /**
-     * Geeft de ScheduleChangesCache voor de gespecifieerde dag.
+     * Maakt een nieuwe DownloadScheduler.
      *
-     * @param today true als de cache voor de roosterwijzigingen van vandaag
-     * gegeven moet worden; false als de de cache voor de roosterwijzigingen van
-     * morgen gegeven moet worden
-     * @return de ScheduleChangesCache voor de gespecifieerde dag
+     * @param fileManager de manager van deze class
      */
-    public ScheduleChangesCache getScheduleCache(boolean today) {
-	if (today) {
-	    return todayCache;
-	} else {
-	    return tomorrowCache;
-	}
+    public DownloadScheduler(FileManager fileManager) {
+	this.fileManager = fileManager;
     }
 
     /**
-     * Maakt een nieuwe ScheduleChangesCache.
+     * Geeft de manager van de bestanden met roosterwijzigingen.
      *
-     * @param today true als het de roosterwijzigingen van vandaag moet bewaren;
-     * false als het de roosterwijzigingen van morgen moet bewaren
-     * @return de nieuwe ScheduleChangesCache
+     * @return de bijbehorende FileManager
      */
-    public ScheduleChangesCache createScheduleChangesCache(boolean today) {
-	if (today) {
-	    todayCache = new ScheduleChangesCache();
-	    return todayCache;
-	} else {
-	    tomorrowCache = new ScheduleChangesCache();
-	    return tomorrowCache;
-	}
-    }
-
-    /**
-     * Maakt een nieuwe FileManager.
-     *
-     * @param rw de basis van dit programma
-     */
-    public DownloadScheduler(Roosterwijzigingen rw) {
-	fileReader = new NehalenniaFileReader(rw, this);
-    }
-
-    /**
-     * Geeft de NehalenniaFileReader die door deze DownloadScheduler gebruikt
-     * wordt.
-     *
-     * @return een instance van NehalenniaFileReader die bij voorkeur gebruikt
-     * moet worden
-     */
-    public NehalenniaFileReader getFileReader() {
-	return fileReader;
+    public FileManager getFileManager() {
+	return fileManager;
     }
 
     /**

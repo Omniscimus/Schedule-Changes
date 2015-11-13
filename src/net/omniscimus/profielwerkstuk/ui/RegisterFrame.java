@@ -120,6 +120,7 @@ public class RegisterFrame extends JFrame {
 		    nextRow++;
 		}
 		getContentPane().add(button, buttonConstraints);
+		currentlyDisplayedIPs.add(ipAddress);
 		currentButtons.add(button);
 
 		revalidate();

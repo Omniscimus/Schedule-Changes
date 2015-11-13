@@ -48,7 +48,9 @@ public class PingableIPsConsumer implements Runnable {
 
     private void processCompletedTasks() {
 
-	for (Future<String> task : pingResults) {
+	List<Future<String>> resultsSnapshot = new ArrayList<>(pingResults);
+
+	for (Future<String> task : resultsSnapshot) {
 	    try {
 		if (!task.isDone() && !task.isCancelled()) {
 		    // Eerste niet-beëindigde taak gevonden; alle beëindigde
@@ -57,7 +59,7 @@ public class PingableIPsConsumer implements Runnable {
 		}
 		String resultIP = task.get();
 		if (resultIP != null) {
-		    EventAnnouncer.detectedIP(resultIP);// <-- Niet thread-safe!Ï
+		    EventAnnouncer.detectedIP(resultIP);
 		}
 		pingResults.remove(0);
 	    } catch (InterruptedException | ExecutionException ex) {

@@ -5,7 +5,6 @@ import java.net.InetAddress;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.omniscimus.profielwerkstuk.text.CommandOutputProcessor;
 
 /**
  *
@@ -25,9 +24,7 @@ public class HostPinger implements Callable<String> {
     public final String call() {
 	try {
 	    if (ipToPing.isReachable(timeout)) {
-		String hostname = ipToPing.getHostName();
-		String macAddress = CommandOutputProcessor.getMACAddressByIP(hostname);
-		return macAddress;
+		return ipToPing.getHostName();
 	    }
 	} catch (IOException ex) {
 	    Logger.getLogger(HostPinger.class.getName()).log(Level.SEVERE, null, ex);

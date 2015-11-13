@@ -14,6 +14,9 @@ import net.omniscimus.profielwerkstuk.EventAnnouncer;
 import net.omniscimus.profielwerkstuk.configuration.ConfigValueCache;
 
 /**
+ * Dit is de taak die uitgevoerd moet worden door de Consumer thread. Hij pingt
+ * de IP-adressen en geeft IP-adressen die bereikbaar zijn door naar
+ * EventAnnouncer.
  *
  * @author omniscimus
  */
@@ -22,6 +25,12 @@ public class PingableIPsConsumer implements Runnable {
     private final PingManager pingManager;
     private final ExecutorService pingerPool;
 
+    /**
+     * Maakt een nieuwe PingableIPsConsumer.
+     *
+     * @param pingManager de PingManager waar deze Consumer IP-adressen uit moet
+     * halen die gepingd moeten worden
+     */
     public PingableIPsConsumer(PingManager pingManager) {
 	this.pingManager = pingManager;
 	this.pingerPool = Executors.newCachedThreadPool();
@@ -46,6 +55,10 @@ public class PingableIPsConsumer implements Runnable {
 	}
     }
 
+    /**
+     * Kijk de lijst met taken door voor taken die voltooid zijn; stuur de
+     * resultaten (IP-adressen) van bereikbare hosts door naar EventAnnouncer.
+     */
     private void processCompletedTasks() {
 
 	List<Future<String>> resultsSnapshot = new ArrayList<>(pingResults);

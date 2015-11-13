@@ -136,13 +136,22 @@ public class HomescreenFrame extends JFrame {
 	return false;
     }
 
+    /**
+     * Voegt een knop toe aan het scherm met daarop de naam van de betreffende
+     * leerling.
+     *
+     * @param studentName de naam van de leerling van wie de device is waar de
+     * knop naar verwijst
+     * @param macAddress het MAC-adres van de device waarmee de leerling zich
+     * identificeert
+     */
     public void addButton(String studentName, String macAddress) {
 
 	if (currentButtons == null) {
 	    currentButtons = new HashMap<>();
 	}
 
-	if(!buttonExists(studentName)) {
+	if (!buttonExists(studentName)) {
 	    JButton button = new JButton();
 	    button.setText(studentName);
 	    GridBagConstraints buttonConstraints = getButtonConstraints();

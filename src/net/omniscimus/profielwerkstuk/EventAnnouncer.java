@@ -43,19 +43,11 @@ public class EventAnnouncer {
     }
 
     /**
-     * Verwittigt alle geregistreerde Listeners van een nieuwe lijst van
-     * gedetecteerde IP- en MAC-adressen.
+     * Zoekt het MAC-adres op dat hoort bij het nieuwe gedetecteerde IP-adres en
+     * verwittigt alle MACAddressListeners van de update.
      *
-     * @param ipToMAC een Map met als Key het IP-adres en als Value het
-     * MAC-adres van de gedetecteerde device
+     * @param ip het nieuwe IP-adres dat gedetecteerd is in een scan
      */
-    /*public static void detectedMACAddressesUpdateEvent(Map<String, String> ipToMAC) {
-     if (macListeners != null) {
-     macListeners.stream().forEach((listener) -> {
-     listener.onMACAddressesUpdate(ipToMAC);
-     });
-     }
-     }*/
     public static void detectedIP(String ip) {
 	if (macListeners != null && !macListeners.isEmpty()) {
 	    try {

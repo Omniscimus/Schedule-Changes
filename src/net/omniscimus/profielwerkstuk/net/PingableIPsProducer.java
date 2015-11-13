@@ -6,6 +6,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Dit is de taak die uitgevoerd moet worden door de Producer thread. Deze
+ * thread voegt constant nieuwe IPs toe aan de lijst met IPs die gepingd moeten
+ * worden in PingManager.
  *
  * @author omniscimus
  */
@@ -14,6 +17,14 @@ public class PingableIPsProducer implements Runnable {
     private final PingManager pingManager;
     private final byte[] routerIPBytes;
 
+    /**
+     * Maakt een nieuwe PingableIPsProducer.
+     *
+     * @param pingManager de PingManager met de lijst waaraan nieuwe IPs
+     * toegevoegd moeten worden
+     * @param routerIP het IP-adres van de router, dat genegeerd moet worden bij
+     * scans
+     */
     public PingableIPsProducer(PingManager pingManager, InetAddress routerIP) {
 	this.pingManager = pingManager;
 	this.routerIPBytes = routerIP.getAddress();

@@ -6,8 +6,8 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -34,18 +34,18 @@ public class RegisterFrame extends JFrame {
 	this.uiManager = uiManager;
 	this.setUndecorated(true);
 	this.setExtendedState(Frame.MAXIMIZED_BOTH);
-	initComponents(new HashMap<>());
+	initComponents();
     }
 
     private JButton backToHomescreen;
     private JLabel title;
     private ArrayList<JButton> currentButtons;
-    private ArrayList<String> currentDisplayedIPs;
+    private ArrayList<String> currentlyDisplayedIPs;
 
     private int nextColumn = 0;
     private int nextRow = 2;
 
-    private void initComponents(Map<String, String> buttons) {
+    private void initComponents() {
 
 	setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	getContentPane().setLayout(new GridBagLayout());
@@ -59,15 +59,7 @@ public class RegisterFrame extends JFrame {
 	}
 
 	currentButtons = new ArrayList<>();
-	currentDisplayedIPs = new ArrayList<>();
-
-	Object[] ipAddresses = buttons.keySet().toArray();
-	Object[] macAddresses = buttons.values().toArray();
-
-	for (int i = 0; i < buttons.size(); i++) {
-	    currentDisplayedIPs.add((String) ipAddresses[i]);
-	    addButton(ipAddresses[i].toString(), macAddresses[i].toString());
-	}
+	currentlyDisplayedIPs = new ArrayList<>();
 
 	backToHomescreen = new JButton();
 	backToHomescreen.setText("Terug");
@@ -94,63 +86,49 @@ public class RegisterFrame extends JFrame {
     }
 
     /**
-     * Voegt devices die nog niet in het frame stonden, maar wel in de gegeven
-     * lijst met adressen, toe aan het frame.
+     * Voegt een knop toe aan het frame, mits er niet al een knop is die
+     * verwijst naar het gegeven MAC-adres.
      *
-     * @param buttons een Map met als Key het IP-adres en als Value het
-     * MAC-adres
-     */
-    public void refreshButtons(Map<String, String> buttons) {
-
-	Object[] keySetArray = buttons.keySet().toArray();
-	Object[] valuesArray = buttons.values().toArray();
-
-	for (int i = 0; i < buttons.size(); i++) {
-	    try {
-		if (!currentDisplayedIPs.contains((String) keySetArray[i])
-			&& !uiManager.getRoosterwijzigingen().getMySQLManager().getRoosterwijzigingenSQL().macAddressIsRegistered((String) valuesArray[i])) {
-		    currentDisplayedIPs.add((String) keySetArray[i]);
-		    addButton(keySetArray[i].toString(), valuesArray[i].toString());
-		}
-	    } catch (SQLException | ClassNotFoundException ex) {
-
-	    }
-	}
-
-	revalidate();
-	repaint();
-
-    }
-
-    /**
-     * Voegt een knop toe aan het frame.
-     * 
      * @param ipAddress het IP-adres dat op de knop moet staan
      * @param macAddress het MAC-adres dat op de knop moet staan
      */
-    private void addButton(String ipAddress, String macAddress) {
-	JButton button = new JButton();
-	button.setText("<html><center>" + ipAddress + "<br />" + macAddress + "</center></html>");
-	GridBagConstraints buttonConstraints = new GridBagConstraints();
-	buttonConstraints.gridx = nextColumn;
-	buttonConstraints.gridy = nextRow;
-	button.addActionListener(new AbstractAction() {
-	    private static final long serialVersionUID = 1L;
+    public void addButton(String ipAddress, String macAddress) {
 
-	    @Override
-	    public void actionPerformed(ActionEvent e) {
-		uiManager.resetHomescreenTimer();
-		uiManager.showIdentifyScreen(macAddress);
+	try {
+	    if (!currentlyDisplayedIPs.contains(ipAddress)
+		    && !uiManager.getRoosterwijzigingen().getMySQLManager()
+		    .getRoosterwijzigingenSQL().macAddressIsRegistered(macAddress)) {
+
+		JButton button = new JButton();
+		button.setText("<html><center>" + ipAddress + "<br />" + macAddress + "</center></html>");
+		GridBagConstraints buttonConstraints = new GridBagConstraints();
+		buttonConstraints.gridx = nextColumn;
+		buttonConstraints.gridy = nextRow;
+		button.addActionListener(new AbstractAction() {
+		    private static final long serialVersionUID = 1L;
+
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+			uiManager.resetHomescreenTimer();
+			uiManager.showIdentifyScreen(macAddress);
+		    }
+		});
+		if (nextColumn == 0) { // blijf op dezelfde rij
+		    nextColumn = 1;
+		} else { // ga naar linksonder
+		    nextColumn = 0;
+		    nextRow++;
+		}
+		getContentPane().add(button, buttonConstraints);
+		currentlyDisplayedIPs.add(ipAddress);
+		currentButtons.add(button);
+
+		revalidate();
+		repaint();
 	    }
-	});
-	if (nextColumn == 0) { // blijf op dezelfde rij
-	    nextColumn = 1;
-	} else { // ga naar linksonder
-	    nextColumn = 0;
-	    nextRow++;
+	} catch (SQLException | ClassNotFoundException ex) {
+	    Logger.getLogger(RegisterFrame.class.getName()).log(Level.SEVERE, null, ex);
 	}
-	getContentPane().add(button, buttonConstraints);
-	currentButtons.add(button);
     }
 
 }

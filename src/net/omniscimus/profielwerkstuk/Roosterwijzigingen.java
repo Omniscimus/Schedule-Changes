@@ -28,19 +28,19 @@ public class Roosterwijzigingen {
      * Een statisch toegangspunt voor dit programma.
      */
     public static Roosterwijzigingen rw;
-    
+
     /**
      * Geeft de DownloadScheduler van dit programma.
-     * 
+     *
      * @return de DownloadScheduler die dit programma gebruikt
      */
     public DownloadScheduler getFileManager() {
 	return downloadScheduler;
     }
-    
+
     /**
      * Geeft de MySQLManager van dit programma.
-     * 
+     *
      * @return de MySQLManager die dit programma gebruikt
      */
     public MySQLManager getMySQLManager() {
@@ -49,7 +49,7 @@ public class Roosterwijzigingen {
 
     /**
      * Main method van de class, aangeroepen als het programma start.
-     * 
+     *
      * @param args de command-line arguments
      */
     public static void main(String[] args) {
@@ -62,7 +62,7 @@ public class Roosterwijzigingen {
     public void initiate() {
 
 	rw = this;
-	
+
 	// Load de config values.
 	configurationManager = new ConfigurationManager(this);
 	try {
@@ -81,28 +81,24 @@ public class Roosterwijzigingen {
 		    Level.SEVERE, "MySQL kon niet geladen worden", ex);
 	    crash(ex.getMessage());
 	}
-	
+
 	// Start een scheduler die elk uur kijkt of er een nieuw bestand is op de server
 	downloadScheduler = new DownloadScheduler(this);
 	downloadScheduler.startScheduling();
-
-	// Laad de implementatie voor het hotspot netwerk.
-	networkManager = new NetworkManager(this);
-	networkManager.load();
 
 	// Start de User Interface.
 	uiManager = new UIManager(this);
 	uiManager.load();
 
 	// Laad de netwerkmanager en start een scan interval.
+	networkManager = new NetworkManager(this);
 	networkManager.load();
-	networkManager.getScanScheduler().startNewNetworkScanInterval();
 
     }
 
     /**
      * Stopt het programma geforceerd.
-     * 
+     *
      * @param error een bericht met de reden voor de crash
      */
     public void crash(String error) {

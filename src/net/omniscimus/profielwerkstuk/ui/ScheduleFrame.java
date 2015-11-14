@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -48,8 +49,21 @@ public class ScheduleFrame extends JFrame {
 	this.setExtendedState(Frame.MAXIMIZED_BOTH);
     }
 
+    private int studentID;
     private String identity;
     private String macAddress;
+
+    public boolean setIdentity(int studentID)
+	    throws SQLException, ClassNotFoundException {
+	macAddress = null;
+	this.identity = uiManager.getRoosterwijzigingen().getMySQLManager()
+		.getSchoolSQL().getStudentName(studentID);
+	if (identity == null) {
+	    return false;
+	}
+	this.studentID = studentID;
+	return true;
+    }
 
     /**
      * Verandert de leerling wiens roosterwijzigingen getoond moeten worden.
@@ -61,9 +75,12 @@ public class ScheduleFrame extends JFrame {
      * @throws ClassNotFoundException als het stuurprogramma voor de MySQL
      * server niet gevonden kon worden
      */
-    public void setIdentity(String newIdentity, String newMACAddress) throws SQLException, ClassNotFoundException {
-	identity = newIdentity;
-	macAddress = newMACAddress;
+    public void setIdentity(String newIdentity, String newMACAddress)
+	    throws SQLException, ClassNotFoundException {
+	this.identity = newIdentity;
+	this.macAddress = newMACAddress;
+	this.studentID = uiManager.getRoosterwijzigingen().getMySQLManager()
+		.getRoosterwijzigingenSQL().getLeerlingnummer(macAddress);
     }
 
     private JButton changeRegistration;
@@ -89,27 +106,11 @@ public class ScheduleFrame extends JFrame {
 	setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	getContentPane().setLayout(new GridBagLayout());
 
-	changeRegistration = new JButton();
-	changeRegistration.setText("Wijzig registratie");
-	GridBagConstraints changeRegistrationConstraints = new GridBagConstraints();
-	changeRegistrationConstraints.gridx = 0;
-	changeRegistrationConstraints.weightx = 1;
-	changeRegistration.addActionListener(new AbstractAction() {
-	    private static final long serialVersionUID = 1L;
-
-	    @Override
-	    public void actionPerformed(ActionEvent e) {
-		uiManager.resetHomescreenTimer();
-		uiManager.showIdentifyScreen(macAddress);
-	    }
-	});
-	getContentPane().add(changeRegistration, changeRegistrationConstraints);
-
 	backToHomescreen = new JButton();
 	backToHomescreen.setText("Terug");
 	GridBagConstraints backToHomescreenConstraints = new GridBagConstraints();
-	backToHomescreenConstraints.gridx = 1;
-	backToHomescreenConstraints.weightx = 1;
+	backToHomescreenConstraints.gridy = 0;
+	backToHomescreenConstraints.ipady = 10;
 	backToHomescreen.addActionListener(new AbstractAction() {
 	    private static final long serialVersionUID = 1L;
 
@@ -120,10 +121,28 @@ public class ScheduleFrame extends JFrame {
 	});
 	getContentPane().add(backToHomescreen, backToHomescreenConstraints);
 
+	if (macAddress != null) {
+	    changeRegistration = new JButton();
+	    changeRegistration.setText("Wijzig registratie");
+	    GridBagConstraints changeRegistrationConstraints = new GridBagConstraints();
+	    changeRegistrationConstraints.gridy = 1;
+	    changeRegistrationConstraints.ipady = 10;
+	    changeRegistration.addActionListener(new AbstractAction() {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		    uiManager.resetHomescreenTimer();
+		    uiManager.showIdentifyScreen(macAddress);
+		}
+	    });
+	    getContentPane().add(changeRegistration, changeRegistrationConstraints);
+	}
+
 	switchDay = new JButton();
 	GridBagConstraints switchDayConstraints = new GridBagConstraints();
-	switchDayConstraints.gridy = 1;
-	switchDayConstraints.weightx = 2;
+	switchDayConstraints.gridy = 2;
+	switchDayConstraints.ipady = 10;
 	getContentPane().add(switchDay, switchDayConstraints);
 
 	Border titleBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -135,8 +154,7 @@ public class ScheduleFrame extends JFrame {
 	generalTitle.setFont(titleFont);
 	generalTitle.setForeground(Color.WHITE);
 	GridBagConstraints generalTitleConstraints = new GridBagConstraints();
-	generalTitleConstraints.gridy = 2;
-	generalTitleConstraints.weightx = 2;
+	generalTitleConstraints.gridy = 3;
 	getContentPane().add(generalTitle, generalTitleConstraints);
 
 	Border containerBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
@@ -146,8 +164,7 @@ public class ScheduleFrame extends JFrame {
 	generalContainer.setLayout(new GridBagLayout());
 	generalContainer.setBorder(containerBorder);
 	GridBagConstraints generalContainerConstraints = new GridBagConstraints();
-	generalContainerConstraints.gridy = 3;
-	generalContainerConstraints.weightx = 2;
+	generalContainerConstraints.gridy = 4;
 	getContentPane().add(generalContainer, generalContainerConstraints);
 
 	title = new JLabel();
@@ -155,8 +172,7 @@ public class ScheduleFrame extends JFrame {
 	title.setFont(titleFont);
 	title.setForeground(Color.WHITE);
 	GridBagConstraints titleConstraints = new GridBagConstraints();
-	titleConstraints.gridy = 4;
-	titleConstraints.weightx = 2;
+	titleConstraints.gridy = 5;
 	getContentPane().add(title, titleConstraints);
 
 	specificContainer = new JPanel();
@@ -164,13 +180,23 @@ public class ScheduleFrame extends JFrame {
 	specificContainer.setLayout(new GridBagLayout());
 	specificContainer.setBorder(containerBorder);
 	GridBagConstraints containerConstraints = new GridBagConstraints();
-	containerConstraints.gridy = 5;
-	containerConstraints.weightx = 2;
+	containerConstraints.gridy = 6;
 	getContentPane().add(specificContainer, containerConstraints);
 
 	switchDay(true, false);
 	pack();
 
+    }
+
+    /**
+     * Adds HTML formatting to the label text.
+     *
+     * @param textToDisplay the text to display on the label
+     * @return a String which can be put on a label
+     */
+    private String getProperLabelText(String textToDisplay) {
+	int screenWidthPixels = Toolkit.getDefaultToolkit().getScreenSize().width;
+	return "<html><p style='width:" + screenWidthPixels * .5 + "px;'>" + textToDisplay + "</p></html>";
     }
 
     private int generalRow = 0;
@@ -202,6 +228,9 @@ public class ScheduleFrame extends JFrame {
 
 	title.setText("Roosterwijzigingen voor " + identity);
 
+	if (macAddress == null && changeRegistration != null) {
+	    changeRegistration.setVisible(false);
+	}
 	generalContainer.removeAll();
 	specificContainer.removeAll();
 
@@ -213,9 +242,7 @@ public class ScheduleFrame extends JFrame {
 	    if (!generalChanges.isEmpty()) {
 		generalChanges.stream().map((change) -> {
 		    JLabel changeLabel = new JLabel();
-		    changeLabel.setText(change);
-		    return changeLabel;
-		}).map((changeLabel) -> {
+		    changeLabel.setText(getProperLabelText(change));
 		    changeLabel.setFont(new Font("Courier New", Font.BOLD, 14));
 		    return changeLabel;
 		}).forEach((changeLabel) -> {
@@ -226,16 +253,16 @@ public class ScheduleFrame extends JFrame {
 		});
 	    } else {
 		JLabel emptyLabel = new JLabel();
-		emptyLabel.setText("Geen algemene roosterwijzigingen!");
+		emptyLabel.setText(getProperLabelText("Geen algemene roosterwijzigingen!"));
 		emptyLabel.setFont(new Font("Courier New", Font.BOLD, 14));
 		generalContainer.add(emptyLabel);
 	    }
 
-	    ArrayList<String> specificChanges = cacheManager.getSpecificScheduleChanges(macAddress, today);
+	    ArrayList<String> specificChanges = cacheManager.getSpecificScheduleChanges(studentID, today);
 	    if (!specificChanges.isEmpty()) {
 		specificChanges.stream().map((change) -> {
 		    JLabel changeLabel = new JLabel();
-		    changeLabel.setText(change);
+		    changeLabel.setText(getProperLabelText(change));
 		    changeLabel.setFont(new Font("Courier New", Font.BOLD, 14));
 		    return changeLabel;
 		}).forEach((changeLabel) -> {
@@ -246,23 +273,25 @@ public class ScheduleFrame extends JFrame {
 		});
 	    } else {
 		JLabel emptyLabel = new JLabel();
-		emptyLabel.setText("Geen persoonlijke roosterwijzigingen!");
+		emptyLabel.setText(getProperLabelText("Geen persoonlijke roosterwijzigingen!"));
 		emptyLabel.setFont(new Font("Courier New", Font.BOLD, 14));
 		specificContainer.add(emptyLabel);
 	    }
 
 	} else {
 	    JLabel notAvailableLabel = new JLabel();
-	    notAvailableLabel.setText((today) ? "De roosterwijzigingen van vandaag zijn nog niet beschikbaar!" : "De roosterwijzigingen van morgen zijn nog niet beschikbaar!");
+	    notAvailableLabel.setText((today)
+		    ? getProperLabelText("De roosterwijzigingen van vandaag zijn nog niet beschikbaar!")
+		    : getProperLabelText("De roosterwijzigingen van morgen zijn nog niet beschikbaar!"));
 	    notAvailableLabel.setFont(new Font("Courier New", Font.BOLD, 14));
 	    generalContainer.add(notAvailableLabel);
 	    specificContainer.add(notAvailableLabel);
 	}
 
-	switchDay.setText(
-		(today) ? "Wijzigingen voor morgen" : "Wijzigingen voor vandaag");
-	for (ActionListener listener
-		: switchDay.getActionListeners()) {
+	switchDay.setText((today)
+		? "Wijzigingen voor morgen"
+		: "Wijzigingen voor vandaag");
+	for (ActionListener listener : switchDay.getActionListeners()) {
 	    switchDay.removeActionListener(listener);
 	}
 

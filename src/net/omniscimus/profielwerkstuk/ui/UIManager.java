@@ -125,6 +125,42 @@ public class UIManager {
 	});
     }
 
+    public void showScheduleFrame(int studentID) {
+	EventQueue.invokeLater(() -> {
+	    boolean success = true;
+	    if (scheduleFrame == null) {
+		try {
+		    scheduleFrame = new ScheduleFrame(this);
+		    if (scheduleFrame.setIdentity(studentID)) {
+			scheduleFrame.initComponents();
+		    } else {
+			success = false;
+		    }
+		} catch (SQLException | ClassNotFoundException ex) {
+		    Logger.getLogger(UIManager.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	    } else {
+		try {
+		    if (scheduleFrame.setIdentity(studentID)) {
+			scheduleFrame.switchDay(true, true);
+		    } else {
+			success = false;
+		    }
+		} catch (SQLException | ClassNotFoundException ex) {
+		    Logger.getLogger(UIManager.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	    }
+	    if (success) {
+		scheduleFrame.getContentPane().setBackground(Color.BLUE);
+		scheduleFrame.setVisible(true);
+		if (currentFrame != null && currentFrame != scheduleFrame) {
+		    currentFrame.setVisible(false);
+		}
+		currentFrame = scheduleFrame;
+	    }
+	});
+    }
+
     /**
      * Laat het scherm met gepersonaliseerde roosterwijzigingen zien voor de
      * betreffende leerling.

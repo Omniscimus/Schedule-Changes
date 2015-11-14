@@ -84,7 +84,7 @@ public class CacheManager {
      * Geeft een lijst met roosterwijzigingen, gefilterd voor de persoon met het
      * gegeven MAC-adres.
      *
-     * @param macAddress het MAC-adres van de persoon van wie de
+     * @param studentID het leerlingnummer van de leerling wiens
      * roosterwijzigingen opgezocht moeten worden
      * @param today true als het om de roosterwijzigingen van vandaag gaat;
      * false als het om de roosterwijzigingen van de volgende schooldag
@@ -95,14 +95,14 @@ public class CacheManager {
      * @throws ClassNotFoundException als het stuurprogramma voor de MySQL
      * server niet gevonden kon worden
      */
-    public ArrayList<String> getSpecificScheduleChanges(String macAddress, boolean today)
+    public ArrayList<String> getSpecificScheduleChanges(int studentID, boolean today)
 	    throws SQLException, ClassNotFoundException {
 
 	ScheduleChangesCache cacheToUse = getScheduleCache(today);
 	if (cacheToUse != null) {
 	    ArrayList<String> schoolClasses
-		    = rw.getMySQLManager().getDatabaseLink()
-		    .getSchoolClassesByMACAddress(macAddress);
+		    = rw.getMySQLManager().getSchoolSQL()
+		    .getSchoolClasses(studentID);
 
 	    ArrayList<String> scheduleChanges = new ArrayList<>();
 	    schoolClasses.stream().map((schoolClass)

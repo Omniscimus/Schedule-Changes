@@ -80,7 +80,7 @@ public class SchoolSQL {
      * @throws ClassNotFoundException als het stuurprogramma voor de MySQL
      * server niet gevonden kon worden
      */
-    public String getName(int leerlingnummer)
+    public String getStudentName(int leerlingnummer)
 	    throws SQLException, ClassNotFoundException {
 
 	Statement statement = mySQLManager.getConnection().createStatement();

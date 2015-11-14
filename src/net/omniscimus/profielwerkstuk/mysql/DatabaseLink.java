@@ -38,7 +38,7 @@ public class DatabaseLink {
      */
     public String getNameByMACAddress(String mac)
 	    throws SQLException, ClassNotFoundException {
-	return sSQL.getName(rwSQL.getLeerlingnummer(mac));
+	return sSQL.getStudentName(rwSQL.getLeerlingnummer(mac));
     }
     
     /**

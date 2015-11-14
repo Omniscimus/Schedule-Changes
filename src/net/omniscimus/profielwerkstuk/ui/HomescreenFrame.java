@@ -1,17 +1,19 @@
 package net.omniscimus.profielwerkstuk.ui;
 
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 /**
@@ -42,6 +44,7 @@ public class HomescreenFrame extends JFrame {
     private GridBagLayout layout;
     private JLabel title;
     private JButton register;
+    private JTextField studentID;
     private final Timer timer;
     private HashMap<JButton, TimerTask> currentButtons;
 
@@ -54,20 +57,11 @@ public class HomescreenFrame extends JFrame {
 	layout = new GridBagLayout();
 	getContentPane().setLayout(layout);
 
-	title = new JLabel();
 	register = new JButton();
-
-	title.setText("Roosterwijzigingen");
-	GridBagConstraints titleConstraints = new GridBagConstraints();
-	titleConstraints.gridx = 0;
-	titleConstraints.gridy = 0;
-	titleConstraints.gridwidth = 2;
-	getContentPane().add(title, titleConstraints);
-
 	register.setText("Registreren");
 	GridBagConstraints registerConstraints = new GridBagConstraints();
-	registerConstraints.gridx = 2;
 	registerConstraints.gridy = 0;
+	registerConstraints.ipady = 10;
 	register.addActionListener(new AbstractAction() {
 	    private static final long serialVersionUID = 1L;
 
@@ -79,46 +73,48 @@ public class HomescreenFrame extends JFrame {
 	});
 	getContentPane().add(register, registerConstraints);
 
+	title = new JLabel();
+	title.setText("Roosterwijzigingen");
+	Font titleFont = new Font(title.getFont().getName(), Font.BOLD, 20);
+	title.setFont(titleFont);
+	GridBagConstraints titleConstraints = new GridBagConstraints();
+	titleConstraints.gridy = 1;
+	titleConstraints.ipady = 10;
+	getContentPane().add(title, titleConstraints);
+
+	studentID = new JTextField();
+	Dimension textFieldSize = new Dimension(1, 25);
+	studentID.setPreferredSize(textFieldSize);
+	studentID.setHorizontalAlignment(JTextField.CENTER);
+	studentID.addActionListener(new AbstractAction() {
+	    private static final long serialVersionUID = 1L;
+
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+		try {
+		    uiManager.showScheduleFrame(Integer.parseInt(e.getActionCommand()));
+		} catch (NumberFormatException ignored) {
+		}
+		studentID.setText("");
+	    }
+	});
+	GridBagConstraints studentIDConstraints = new GridBagConstraints();
+	studentIDConstraints.gridy = 2;
+	studentIDConstraints.ipadx = 100;
+	getContentPane().add(studentID, studentIDConstraints);
+	studentID.requestFocus(false);
+
 	pack();
     }
 
-    /**
-     * Zet knoppen met de namen van leerlingen op het scherm.
-     *
-     * @param nameToMAC een Map met als Key de naam van de leerling en als Value
-     * het MAC-adres van de leerling
-     * @param repack true als het frame opnieuw gegenereerd moet worden; anders
-     * false
-     */
-    public void refreshButtons(Map<String, String> nameToMAC, boolean repack) {
-
-	if (currentButtons == null) {
-	    currentButtons = new HashMap<>();
-	}
-
-	nameToMAC.keySet().stream().filter((name) -> (name != null && !buttonExists(name))).forEach((name) -> {
-	    JButton button = new JButton();
-	    button.setText(name);
-	    GridBagConstraints buttonConstraints = getButtonConstraints();
-
-	    button.addActionListener(new AbstractAction() {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-		    uiManager.resetHomescreenTimer();
-		    uiManager.showScheduleFrame(name, nameToMAC.get(name));
-		}
-	    });
-	    addButton(button, buttonConstraints);
-	});
-
-	if (repack) {
-	    revalidate();
-	    repaint();
-	}
+    @Override
+    public void setVisible(boolean b) {
+	super.setVisible(b);
+	studentID.requestFocus(false);
     }
 
+    
+    
     /**
      * Geeft of een knop met de gegeven tekst al bestaat.
      *
@@ -237,7 +233,7 @@ public class HomescreenFrame extends JFrame {
     private GridBagConstraints getButtonConstraints() {
 	// Startwaarden voor de plaats
 	int column = 0;
-	int row = 1;
+	int row = 3;
 
 	// Run deze code net zolang tot er een lege plek in de frame is gevonden
 	boolean emptySpotFound = false;

@@ -1,5 +1,8 @@
 <?php
 
+require_once 'text/File_Manager.php';
+require_once 'util/String_Util.php';
+
 /**
  * Description of File_Downloader
  *
@@ -30,20 +33,22 @@ class File_Downloader {
      * 
      * @param int $day de dag waarvan het bestand gedownload moet worden,
      * waarbij 0 = zondag en 6 = zaterdag.
+     * @return string de naam van het gedownloade bestand
      */
     function downloadScheduleFile($day) {
-        $today = getDayAbbreviation($day);
+        $today = $this->getDayAbbreviation($day);
         $url = "https://files.itslearning.com/data/394/1076/rooster" . $today . ".htm";
         $this->downloadFile($url, "schedule-files");
+        return "rooster" . $today . ".htm";
     }
 
     /**
      * Verwijdert oude bestanden met roosterwijzigingen.
      */
     function deleteOldScheduleFiles() {
-        $files = scandir("schedule-files/");
+        $files = scandir(File_Manager::getScheduleFilesFolder());
         foreach ($files as $file) {
-            if($this->endswith($file, ".htm")) {
+            if(String_Util::endswith($file, ".htm")) {
                 unlink("schedule-files/" . $file);
             }
             // TODO also delete old processed .txt files.
@@ -99,24 +104,6 @@ class File_Downloader {
         } else {
             return $today + 1;
         }
-    }
-
-    /**
-     * Geeft of een string eindigt met de gegeven substring.
-     * 
-     * @param string $string de string waarvan getest moet worden of hij eindigt
-     * met $test
-     * @param string $test de string waarvan getest moet worden of hij op het
-     * einde van $string staat
-     * @return boolean TRUE als $string eindigt met $test; anders FALSE
-     */
-    function endswith($string, $test) {
-        $strlen = strlen($string);
-        $testlen = strlen($test);
-        if ($testlen > $strlen) {
-            return FALSE;
-        }
-        return substr_compare($string, $test, $strlen - $testlen, $testlen) === 0;
     }
 
 }

@@ -72,9 +72,9 @@ class School_SQL {
             $results = $this->mySQL_manager->getConnection()->
                     query("SELECT DISTINCT klas FROM school.klassen;");
             if ($results !== FALSE) {
-                $school_classes = [$results->num_rows];
-                for ($i = 0; i < $results->num_rows; $i++) {
-                    $school_classes[i] = $results->fetch_assoc()["klas"];
+                $school_classes = [];
+                for ($i = 0; $i < $results->num_rows; $i++) {
+                    $school_classes[$i] = $results->fetch_assoc()["klas"];
                 }
                 $this->school_classes = $school_classes;
                 return $school_classes;
@@ -89,7 +89,7 @@ class School_SQL {
      * @return bool TRUE als de klas bestaat; anders FALSE
      */
     function schoolClassExists($school_class) {
-        return in_array(getAllSchoolClasses(), $school_class);
+        return in_array($school_class, $this->getAllSchoolClasses());
     }
 
 }

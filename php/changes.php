@@ -2,17 +2,20 @@
 require_once 'sql/MySQL_Manager.php';
 require_once 'text/File_Downloader.php';
 require_once 'text/File_Processor.php';
+require_once 'text/Schedule_Reader.php';
 
 $config = include 'config.php';
 date_default_timezone_set($config["default_timezone"]);
 
 if (is_numeric($_POST["studentID"]) && strlen($_POST["studentID"]) === 6) {
-    $student_id = $_POST["studentID"];
+//    $student_id = $_POST["studentID"];
     $mySQL = new MySQL_Manager();
-    $file_downloader = new File_Downloader();
-    $file_downloader->deleteOldScheduleFiles();
-    $file_processor = new File_Processor($file_downloader->downloadScheduleFile($file_downloader->getTodayNumber()));
-    $file_processor->processFile();
+//    $file_downloader = new File_Downloader();
+//    $file_downloader->deleteOldScheduleFiles();
+//    $file_processor = new File_Processor($file_downloader->downloadScheduleFile($file_downloader->getTodayNumber()));
+//    $schedule_reader = new Schedule_Reader($mySQL->getSchoolSQL(), $file_processor->processFile());
+    $schedule_reader = new Schedule_Reader($mySQL->getSchoolSQL(), "schedule-files/roosterdi.txt");
+    $schedule_reader->categorizeScheduleChanges();
 }
 ?>
 <!DOCTYPE html>

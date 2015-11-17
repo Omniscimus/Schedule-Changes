@@ -129,7 +129,7 @@ class File_Processor {
      */
     private function writeArrayToFile($array, $file) {
         $target_file = fopen($file, 'w');
-        if($target_file === FALSE) {
+        if ($target_file === FALSE) {
             throw new Exception("Kon het bestand voor verwerkte roosterwijzigingen niet openen.");
         }
         foreach ($array as $entry) {

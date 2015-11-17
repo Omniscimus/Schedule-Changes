@@ -11,8 +11,8 @@ require_once 'util/String_Util.php';
 class File_Downloader {
 
     /**
-     * Downloadt het bestand naar de webserver. Als het downloaden mislukt,
-     * gebeurt er niets.
+     * Downloadt het bestand naar de webserver in UTF-8 formaat. Als het
+     * downloaden mislukt, gebeurt er niets.
      * 
      * @param string $url een URL naar het bestand
      * @param string $target_folder het pad naar de map waar het bestand in moet
@@ -21,7 +21,7 @@ class File_Downloader {
     function downloadFile($url, $target_folder) {
         $file_name = substr($url, strrpos($url, "/") + 1, strlen($url));
         $target_path = $target_folder . DIRECTORY_SEPARATOR . $file_name;
-        $new_file = file_get_contents($url);
+        $new_file = mb_convert_encoding(file_get_contents($url), "UTF-8");
         if ($new_file !== FALSE) {
             file_put_contents($target_path, $new_file);
         }

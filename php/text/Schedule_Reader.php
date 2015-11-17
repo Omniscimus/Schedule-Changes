@@ -1,6 +1,7 @@
 <?php
 
 require_once 'sql/School_SQL.php';
+require_once 'util/Json_Handler.php';
 
 /**
  * Leest het TXT-bestand dat verwerkt is door File_Processor en deelt de
@@ -29,12 +30,40 @@ class Schedule_Reader {
         $this->general_changes = [];
         $this->changes_by_school_class = [];
     }
+
+    /**
+     * Verwerkt het TXT-bestand met roosterwijzigingen, deelt de wijzigingen in
+     * per klas of merkt ze als algemene wijzigingen, en schrijft de
+     * resulterende arrays naar json-bestanden voor makkelijke toegang.
+     */
+    function readScheduleChanges() {
+        $this->categorizeScheduleChanges();
+        $this->writeChangesToJson();
+    }
     
+    /**
+     * Schrijft de verwerkte roosterwijzigingen naar tijdelijke json-bestanden.
+     * Er wordt een bestand gemaakt met algemene roosterwijzigingen, een array,
+     * en een bestand met specifieke roosterwijzigingen, een mapped array waarin
+     * telkens een string (key) gekoppeld staat aan een array met
+     * roosterwijzigingen (value).
+     */
+    private function writeChangesToJson() {
+        $directory_to_put_files = File_Manager::schedule_files_folder . "json/";
+        if (!file_exists($directory_to_put_files)) {
+            mkdir($directory_to_put_files);
+        }
+        $general_changes_file = $directory_to_put_files . "general.json";
+        Json_Handler::writeToJsonFile($this->general_changes, $general_changes_file);
+        $specific_changes_file = $directory_to_put_files . "specific.json";
+        Json_Handler::writeToJsonFile($this->changes_by_school_class, $specific_changes_file);
+    }
+
     /**
      * Verdeelt de roosterwijzigingen per klas en stopt wijzigingen die niet
      * voor een bepaalde klas zijn in een array met algemene roosterwijzigingen.
      */
-    function categorizeScheduleChanges() {
+    private function categorizeScheduleChanges() {
         $schedule_changes = file($this->txt_file);
         foreach ($schedule_changes as $schedule_change) {
             $school_class = $this->getSchoolClass($schedule_change);
@@ -43,7 +72,7 @@ class Schedule_Reader {
                 array_push($this->general_changes, $schedule_change);
             } else {
                 // Bewaar in klas-specifieke array
-                if($this->changes_by_school_class[$school_class] === NULL) {
+                if ($this->changes_by_school_class[$school_class] === NULL) {
                     $this->changes_by_school_class[$school_class] = [];
                 }
                 array_push($this->changes_by_school_class[$school_class], $schedule_change);

@@ -1,5 +1,6 @@
 package net.omniscimus.profielwerkstuk.ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
@@ -13,6 +14,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
@@ -43,7 +45,10 @@ public class HomescreenFrame extends JFrame {
 
     private GridBagLayout layout;
     private JLabel title;
+    private JPanel buttonPanel;
+    private JButton help;
     private JButton register;
+    private JLabel studentIDText;
     private JTextField studentID;
     private final Timer timer;
     private HashMap<JButton, TimerTask> currentButtons;
@@ -57,21 +62,38 @@ public class HomescreenFrame extends JFrame {
 	layout = new GridBagLayout();
 	getContentPane().setLayout(layout);
 
+	buttonPanel = new JPanel();
+	buttonPanel.setLayout(new GridBagLayout());
+	buttonPanel.setBackground(Color.YELLOW);
+	GridBagConstraints buttonPanelConstraints = new GridBagConstraints();
+	buttonPanelConstraints.ipady = 10;
+	getContentPane().add(buttonPanel, buttonPanelConstraints);
+	
+	help = new JButton();
+	help.setText("Help");
+	help.addActionListener(new AbstractAction() {
+	    private static final long serialVersionUID = 1L;
+
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+		uiManager.showHelpFrame();
+	    }
+	});
+	buttonPanel.add(help);
+	
 	register = new JButton();
 	register.setText("Registreren");
 	GridBagConstraints registerConstraints = new GridBagConstraints();
-	registerConstraints.gridy = 0;
-	registerConstraints.ipady = 10;
+	registerConstraints.gridx = 2;
 	register.addActionListener(new AbstractAction() {
 	    private static final long serialVersionUID = 1L;
 
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
-		uiManager.resetHomescreenTimer();
 		uiManager.showRegisterScreen();
 	    }
 	});
-	getContentPane().add(register, registerConstraints);
+	buttonPanel.add(register, registerConstraints);
 
 	title = new JLabel();
 	title.setText("Roosterwijzigingen");
@@ -81,6 +103,12 @@ public class HomescreenFrame extends JFrame {
 	titleConstraints.gridy = 1;
 	titleConstraints.ipady = 10;
 	getContentPane().add(title, titleConstraints);
+
+	studentIDText = new JLabel();
+	studentIDText.setText("Leerlingnummer: ");
+	GridBagConstraints studentIDTextConstraints = new GridBagConstraints();
+	studentIDTextConstraints.gridy = 2;
+	getContentPane().add(studentIDText, studentIDTextConstraints);
 
 	studentID = new JTextField();
 	Dimension textFieldSize = new Dimension(1, 25);
@@ -99,7 +127,7 @@ public class HomescreenFrame extends JFrame {
 	    }
 	});
 	GridBagConstraints studentIDConstraints = new GridBagConstraints();
-	studentIDConstraints.gridy = 2;
+	studentIDConstraints.gridy = 3;
 	studentIDConstraints.ipadx = 100;
 	getContentPane().add(studentID, studentIDConstraints);
 	studentID.requestFocus(false);
@@ -113,8 +141,6 @@ public class HomescreenFrame extends JFrame {
 	studentID.requestFocus(false);
     }
 
-    
-    
     /**
      * Geeft of een knop met de gegeven tekst al bestaat.
      *
@@ -233,7 +259,7 @@ public class HomescreenFrame extends JFrame {
     private GridBagConstraints getButtonConstraints() {
 	// Startwaarden voor de plaats
 	int column = 0;
-	int row = 3;
+	int row = 4;
 
 	// Run deze code net zolang tot er een lege plek in de frame is gevonden
 	boolean emptySpotFound = false;

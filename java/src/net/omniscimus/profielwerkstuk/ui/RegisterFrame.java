@@ -100,7 +100,7 @@ public class RegisterFrame extends JFrame {
 		    .getRoosterwijzigingenSQL().macAddressIsRegistered(macAddress)) {
 
 		JButton button = new JButton();
-		button.setText("<html><center>" + ipAddress + "<br />" + macAddress + "</center></html>");
+		button.setText("<html><center>" + ipAddress + "</center></html>");
 		GridBagConstraints buttonConstraints = new GridBagConstraints();
 		buttonConstraints.gridx = nextColumn;
 		buttonConstraints.gridy = nextRow;

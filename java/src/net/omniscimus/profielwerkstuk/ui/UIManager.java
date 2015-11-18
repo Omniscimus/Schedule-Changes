@@ -45,6 +45,7 @@ public class UIManager {
     private RegisterFrame registerFrame;
     private IdentifyFrame identifyFrame;
     private ScheduleFrame scheduleFrame;
+    private HelpFrame helpFrame;
     private JFrame currentFrame;
 
     private Timer homescreenTimer;
@@ -100,6 +101,7 @@ public class UIManager {
 		currentFrame.setVisible(false);
 	    }
 	    currentFrame = registerFrame;
+	    startHomescreenTimer();
 	});
     }
 
@@ -122,9 +124,15 @@ public class UIManager {
 		currentFrame.setVisible(false);
 	    }
 	    currentFrame = identifyFrame;
+	    startHomescreenTimer();
 	});
     }
 
+    /**
+     * Laat het scherm met gepersonaliseerde roosterwijzigingen zien.
+     *
+     * @param studentID de leerlingnummer van de betreffende leerling
+     */
     public void showScheduleFrame(int studentID) {
 	EventQueue.invokeLater(() -> {
 	    boolean success = true;
@@ -157,6 +165,7 @@ public class UIManager {
 		    currentFrame.setVisible(false);
 		}
 		currentFrame = scheduleFrame;
+		startHomescreenTimer();
 	    }
 	});
     }
@@ -192,6 +201,25 @@ public class UIManager {
 		currentFrame.setVisible(false);
 	    }
 	    currentFrame = scheduleFrame;
+	    startHomescreenTimer();
+	});
+    }
+
+    /**
+     * Geeft het scherm met gebruikersinstructies weer.
+     */
+    public void showHelpFrame() {
+	EventQueue.invokeLater(() -> {
+	    if (helpFrame == null) {
+		helpFrame = new HelpFrame(this);
+	    }
+	    helpFrame.getContentPane().setBackground(Color.LIGHT_GRAY);
+	    helpFrame.setVisible(true);
+	    if (currentFrame != null && currentFrame != helpFrame) {
+		currentFrame.setVisible(false);
+	    }
+	    currentFrame = helpFrame;
+	    startHomescreenTimer();
 	});
     }
 
@@ -229,10 +257,21 @@ public class UIManager {
 
 }
 
+/**
+ * Deze class zorgt ervoor dat het programma na een bepaalde tijd van
+ * inactiviteit weer terugkeert naar het Homescreen.
+ *
+ * @author omniscimus
+ */
 class HomescreenTimerTask extends TimerTask {
 
     private final UIManager uiManager;
 
+    /**
+     * Maakt een nieuwe HomescreenTimerTask.
+     *
+     * @param uiManager
+     */
     HomescreenTimerTask(UIManager uiManager) {
 	this.uiManager = uiManager;
     }

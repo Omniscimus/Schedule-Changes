@@ -18,7 +18,7 @@ ping-timeout: 1000
 
 # Hoe lang, in seconden, moet er gewacht worden tot er teruggeschakeld wordt
 # naar het Home scherm, na de laatste gebruikersinteractie?
-interaction-timeout: 30
+interaction-timeout: 240
 
 # MySQL-verbinding gegevens
 mysql-hostname: localhost

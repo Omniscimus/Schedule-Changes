@@ -1,7 +1,8 @@
 <?php
+require_once 'Schedule_Changes.php';
+
 if (is_numeric($_POST["studentID"]) && strlen($_POST["studentID"]) === 6) {
     $schedule_changes = new Schedule_Changes($_POST["studentID"]);
-    $schedule_changes->initiate();
 }
 ?>
 <!DOCTYPE html>
@@ -17,8 +18,13 @@ if (is_numeric($_POST["studentID"]) && strlen($_POST["studentID"]) === 6) {
         if (isset($schedule_changes)) {
             try {
                 echo "<h2>Algemene roosterwijzigingen</h2><br />";
-
-                echo "<h2>Roosterwijzigingen voor " . $schedule_changes->mySQL->getSchoolSQL()->getStudentName($student_id) . "</h2><br />";
+                foreach ($schedule_changes->schedule_reader->getGeneralChanges() as $general_change) {
+                    echo $general_change . "<br />";
+                }
+                echo "<h2>Roosterwijzigingen voor " . $schedule_changes->mySQL->getSchoolSQL()->getStudentName($schedule_changes->student_id) . "</h2><br />";
+                foreach ($schedule_changes->schedule_reader->getSpecificChanges() as $specific_change) {
+                    echo $specific_change . "<br />";
+                }
             } catch (Exception $e) {
                 echo $e->getMessage();
             }

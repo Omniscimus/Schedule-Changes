@@ -31,6 +31,9 @@ class Json_Handler {
      * @return mixed het object uit het bestand dat in json gecodeerd was
      */
     static function readFromJsonFile($file) {
+        if (!file_exists($file)) {
+            throw new Exception("Bestand bestaat niet!");
+        }
         $json = file_get_contents($file);
         return json_decode($json);
     }

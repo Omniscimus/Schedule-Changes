@@ -9,23 +9,25 @@ require_once 'util/Json_Handler.php';
  *
  * @author omniscimus
  */
-class Schedule_Reader {
+class Schedule_Organizer {
 
     private static $school_class_pattern;
-    private $school_sql;
+    private $schedule_changes_class;
     private $txt_file;
     private $general_changes;
     private $changes_by_school_class; // Associative, class => array(changes)
 
     /**
-     * Maakt een nieuwe Schedule_Reader.
+     * Maakt een nieuwe Schedule_Organizer.
      * 
-     * @param School_SQL $school_sql het toegangspunt voor de schooldatabase
+     * @param Schedule_Changes $schedule_changes_class de basis-class van dit
+     * programma, vanwaar toegang tot SQL-functionaliteit verkregen kan worden
      * @param string $txt_file het TXT-bestand met verwerkte roosterwijzigingen
      */
-    function __construct($school_sql, $txt_file) {
-        Schedule_Reader::$school_class_pattern = "#^\\S+#";
-        $this->school_sql = $school_sql;
+
+    function __construct($schedule_changes_class, $txt_file) {
+        Schedule_Organizer::$school_class_pattern = "#^\\S+#";
+        $this->schedule_changes_class = $schedule_changes_class;
         $this->txt_file = $txt_file;
         $this->general_changes = [];
         $this->changes_by_school_class = [];
@@ -40,7 +42,7 @@ class Schedule_Reader {
         $this->categorizeScheduleChanges();
         $this->writeChangesToJson();
     }
-    
+
     /**
      * Schrijft de verwerkte roosterwijzigingen naar tijdelijke json-bestanden.
      * Er wordt een bestand gemaakt met algemene roosterwijzigingen, een array,
@@ -66,16 +68,18 @@ class Schedule_Reader {
     private function categorizeScheduleChanges() {
         $schedule_changes = file($this->txt_file);
         foreach ($schedule_changes as $schedule_change) {
-            $school_class = $this->getSchoolClass($schedule_change);
-            if ($school_class === FALSE) {
-                // Bewaar in algemene roosterwijzigingen
-                array_push($this->general_changes, $schedule_change);
-            } else {
-                // Bewaar in klas-specifieke array
-                if ($this->changes_by_school_class[$school_class] === NULL) {
-                    $this->changes_by_school_class[$school_class] = [];
+            if ($schedule_change != "&nbsp;\n") {
+                $school_class = $this->getSchoolClass($schedule_change);
+                if ($school_class === FALSE) {
+                    // Bewaar in algemene roosterwijzigingen
+                    array_push($this->general_changes, $schedule_change);
+                } else {
+                    // Bewaar in klas-specifieke array
+                    if ($this->changes_by_school_class[$school_class] === NULL) {
+                        $this->changes_by_school_class[$school_class] = [];
+                    }
+                    array_push($this->changes_by_school_class[$school_class], $schedule_change);
                 }
-                array_push($this->changes_by_school_class[$school_class], $schedule_change);
             }
         }
     }
@@ -88,7 +92,7 @@ class Schedule_Reader {
      */
     private function getSchoolClass($schedule_change) {
         $matches = [];
-        if (preg_match(Schedule_Reader::$school_class_pattern, $schedule_change, $matches) === 1) {
+        if (preg_match(Schedule_Organizer::$school_class_pattern, $schedule_change, $matches) === 1) {
             $school_class = "";
             foreach (str_split($matches[0]) as $char) {
                 if ($this->isValidSchoolClassCharacter($char)) {
@@ -97,7 +101,7 @@ class Schedule_Reader {
                     break;
                 }
             }
-            if ($this->school_sql->schoolClassExists($school_class)) {
+            if ($this->schedule_changes_class->mySQL->getSchoolSQL()->schoolClassExists($school_class)) {
                 return $school_class;
             } else {
                 return FALSE;
@@ -117,7 +121,8 @@ class Schedule_Reader {
     private function isValidSchoolClassCharacter($char) {
         $valid_chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
             'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
-            'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '&'];
+            'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '&',
+            '-'];
         if (in_array($char, $valid_chars)) {
             return TRUE;
         } else {

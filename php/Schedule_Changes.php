@@ -2,8 +2,7 @@
 
 require_once 'sql/MySQL_Manager.php';
 require_once 'text/File_Downloader.php';
-require_once 'text/File_Processor.php';
-require_once 'text/Schedule_Organizer.php';
+require_once 'text/Schedule_Reader.php';
 
 /**
  * Main class voor dit programma.
@@ -16,6 +15,7 @@ class Schedule_Changes {
     var $student_id;
     var $mySQL;
     var $file_downloader;
+    var $schedule_reader;
 
     /**
      * Maakt een nieuwe Schedule_Changes class.
@@ -28,20 +28,7 @@ class Schedule_Changes {
         $this->student_id = $student_id;
         $this->mySQL = new MySQL_Manager();
         $this->file_downloader = new File_Downloader();
-    }
-    
-    /**
-     * Doet routine-operaties aan bestanden, zoals het verwijderen van
-     * verouderde bestanden en het downloaden van nieuwe bestanden met
-     * roosterwijzigingen. Moet aangeroepen worden door changes.php.
-     */
-    function initiate() {
-        $this->file_downloader->deleteOldScheduleFiles();
-        // TODO: Only download & process a new file if it's not already present
-        $today = $this->file_downloader->getTodayNumber();
-        $schedule_file = $this->file_downloader->downloadScheduleFile($today);
-        $file_processor = new File_Processor($schedule_file);
-        $processed_file = $file_processor->processFile();
+        $this->schedule_reader = new Schedule_Reader($this);
     }
 
 }

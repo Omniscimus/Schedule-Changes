@@ -52,10 +52,9 @@ class School_SQL {
         $statement->execute();
 
         $statement->bind_result($school_class);
-        $school_classes = [$statement->num_rows];
-        for ($i = 0; i < $statement->num_rows; $i++) {
-            $statement->fetch();
-            $school_classes[i] = $school_class;
+        $school_classes = [];
+        while ($statement->fetch() !== NULL) {
+            array_push($school_classes, $school_class);
         }
         return $school_classes;
     }

@@ -1,8 +1,8 @@
 <?php
 require_once 'Schedule_Changes.php';
 
-if (is_numeric($_POST["studentID"]) && strlen($_POST["studentID"]) === 6) {
-    $schedule_changes = new Schedule_Changes($_POST["studentID"]);
+if (is_numeric($_GET["studentID"]) && strlen($_GET["studentID"]) === 6) {
+    $schedule_changes = new Schedule_Changes($_GET["studentID"]);
 }
 ?>
 <!DOCTYPE html>

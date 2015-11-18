@@ -1,20 +1,7 @@
 <?php
-require_once 'sql/MySQL_Manager.php';
-require_once 'text/File_Downloader.php';
-require_once 'text/File_Processor.php';
-require_once 'text/Schedule_Reader.php';
-
-$config = include 'config.php';
-date_default_timezone_set($config["default_timezone"]);
-
 if (is_numeric($_POST["studentID"]) && strlen($_POST["studentID"]) === 6) {
-    $student_id = $_POST["studentID"];
-    $mySQL = new MySQL_Manager();
-    $file_downloader = new File_Downloader();
-    $file_downloader->deleteOldScheduleFiles();
-    $file_processor = new File_Processor($file_downloader->downloadScheduleFile($file_downloader->getTodayNumber()));
-    $schedule_reader = new Schedule_Reader($mySQL->getSchoolSQL(), $file_processor->processFile());
-    $schedule_reader->readScheduleChanges();
+    $schedule_changes = new Schedule_Changes($_POST["studentID"]);
+    $schedule_changes->initiate();
 }
 ?>
 <!DOCTYPE html>
@@ -27,11 +14,11 @@ if (is_numeric($_POST["studentID"]) && strlen($_POST["studentID"]) === 6) {
         <h1>Roosterwijzigingen</h1>
         <br />
         <?php
-        if (isset($student_id)) {
+        if (isset($schedule_changes)) {
             try {
                 echo "<h2>Algemene roosterwijzigingen</h2><br />";
 
-                echo "<h2>Roosterwijzigingen voor " . $mySQL->getSchoolSQL()->getStudentName($student_id) . "</h2><br />";
+                echo "<h2>Roosterwijzigingen voor " . $schedule_changes->mySQL->getSchoolSQL()->getStudentName($student_id) . "</h2><br />";
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
@@ -42,4 +29,6 @@ if (is_numeric($_POST["studentID"]) && strlen($_POST["studentID"]) === 6) {
     </body>
 </html>
 <?php
-$mySQL->closeConnection();
+if (isset($schedule_changes)) {
+    $schedule_changes->mySQL->closeConnection();
+}

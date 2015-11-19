@@ -114,7 +114,7 @@ class File_Processor {
     private function polishChanges($schedule_changes) {
         $polished_changes = [];
         foreach ($schedule_changes as $change) {
-            if (strlen($change) !== 0 && substr($change, 0, 22) != "ROOSTERWIJZIGINGEN VOOR") {
+            if (strlen($change) !== 0 && substr($change, 0, 23) != "ROOSTERWIJZIGINGEN VOOR") {
                 array_push($polished_changes, $change);
             }
         }

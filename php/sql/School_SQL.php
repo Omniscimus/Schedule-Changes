@@ -73,7 +73,7 @@ class School_SQL {
             if ($results !== FALSE) {
                 $school_classes = [];
                 for ($i = 0; $i < $results->num_rows; $i++) {
-                    $school_classes[$i] = $results->fetch_assoc()["klas"];
+                    $school_classes[$i] = strtolower($results->fetch_assoc()["klas"]);
                 }
                 $this->school_classes = $school_classes;
                 return $school_classes;
@@ -88,7 +88,8 @@ class School_SQL {
      * @return bool TRUE als de klas bestaat; anders FALSE
      */
     function schoolClassExists($school_class) {
-        return in_array($school_class, $this->getAllSchoolClasses());
+        $school_class_lower = strtolower($school_class);
+        return in_array($school_class_lower, $this->getAllSchoolClasses());
     }
 
 }

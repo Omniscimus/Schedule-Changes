@@ -51,7 +51,7 @@ class Schedule_Organizer {
      * roosterwijzigingen (value).
      */
     private function writeChangesToJson() {
-        $directory_to_put_files = File_Manager::schedule_files_folder . "json/";
+        $directory_to_put_files = $this->schedule_changes_class->file_manager->getScheduleFilesFolder() . "json/";
         if (!file_exists($directory_to_put_files)) {
             mkdir($directory_to_put_files);
         }

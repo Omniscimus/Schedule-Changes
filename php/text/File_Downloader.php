@@ -18,7 +18,7 @@ class File_Downloader {
      * @param string $target_folder het pad naar de map waar het bestand in moet
      * komen
      */
-    function downloadFile($url, $target_folder) {
+    static function downloadFile($url, $target_folder) {
         $file_name = substr($url, strrpos($url, "/") + 1, strlen($url));
         $target_path = $target_folder . DIRECTORY_SEPARATOR . $file_name;
         $new_file = mb_convert_encoding(file_get_contents($url), "UTF-8");
@@ -33,25 +33,26 @@ class File_Downloader {
      * 
      * @param int $day de dag waarvan het bestand gedownload moet worden,
      * waarbij 0 = zondag en 6 = zaterdag.
-     * @return string de naam van het gedownloade bestand
+     * @param string $target_folder de map waar het bestand naartoe gedownload
+     * zal worden
+     * @return string het pad naar het gedownloade bestand
      */
-    function downloadScheduleFile($day) {
-        $today = $this->getDayAbbreviation($day);
+    static function downloadScheduleFile($day, $target_folder) {
+        $today = File_Downloader::getDayAbbreviation($day);
         $url = "https://files.itslearning.com/data/394/1076/rooster" . $today . ".htm";
-        $this->downloadFile($url, "schedule-files");
-        return "rooster" . $today . ".htm";
+        File_Downloader::downloadFile($url, $target_folder);
+        return $target_folder . "rooster" . $today . ".htm";
     }
 
     /**
      * Verwijdert oude bestanden met roosterwijzigingen.
      */
-    function deleteOldScheduleFiles() {
-        $files = scandir(File_Manager::getScheduleFilesFolder());
+    static function deleteOldScheduleFiles() {
+        $files = scandir("schedule-files" . DIRECTORY_SEPARATOR);
         foreach ($files as $file) {
-            if(String_Util::endswith($file, ".htm")) {
+            if ($file != ".." && $file != "." && substr($file, 0, 2) < date("W")) {
                 unlink("schedule-files/" . $file);
             }
-            // TODO also delete old processed .txt files.
         }
     }
 
@@ -64,7 +65,7 @@ class File_Downloader {
      * waarbij 0 = zondag en 6 = zaterdag
      * @return string de Nederlandse afkorting van de dag van de week
      */
-    function getDayAbbreviation($day_number) {
+    static function getDayAbbreviation($day_number) {
         switch ($day_number) {
             case 6:
             case 0:
@@ -78,31 +79,6 @@ class File_Downloader {
                 return "do";
             case 5:
                 return "vr";
-        }
-    }
-
-    /**
-     * Geeft het nummer dat hoort bij de huidige dag van de week.
-     * 
-     * @return int het nummer van de dag van de week van vandaag, waarbij
-     * 0 = zondag en 6 = zaterdag.
-     */
-    function getTodayNumber() {
-        return date("w");
-    }
-
-    /**
-     * Geeft het nummer dat hoort bij de dag van de week van morgen.
-     * 
-     * @return int het nummer van de dag van de week van morgen, waarbij
-     * 0 = zondag en 6 = zaterdag.
-     */
-    function getTomorrowNumber() {
-        $today = $this->getTodayNumber();
-        if ($today === 6) {
-            return 0;
-        } else {
-            return $today + 1;
         }
     }
 

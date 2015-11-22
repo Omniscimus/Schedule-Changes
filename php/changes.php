@@ -1,8 +1,15 @@
 <?php
 require_once 'Schedule_Changes.php';
+$config = include 'config.php';
+date_default_timezone_set($config["default_timezone"]);
 
 if (is_numeric($_GET["studentID"]) && strlen($_GET["studentID"]) === 6) {
-    $schedule_changes = new Schedule_Changes($_GET["studentID"]);
+    if (is_int($_GET["weekDay"]) && $_GET["weekDay"] < 7 && $_GET["weekDay"] > -1) {
+        $day = $_GET["weekDay"];
+    } else {
+        $day = date("d");
+    }
+    $schedule_changes = new Schedule_Changes($_GET["studentID"], $day);
 }
 ?>
 <!DOCTYPE html>
@@ -18,11 +25,11 @@ if (is_numeric($_GET["studentID"]) && strlen($_GET["studentID"]) === 6) {
         if (isset($schedule_changes)) {
             try {
                 echo "<h2>Algemene roosterwijzigingen</h2><br />";
-                foreach ($schedule_changes->schedule_reader->getGeneralChanges() as $general_change) {
+                foreach ($schedule_changes->file_manager->schedule_reader->getGeneralChanges() as $general_change) {
                     echo $general_change . "<br />";
                 }
                 echo "<h2>Roosterwijzigingen voor " . $schedule_changes->mySQL->getSchoolSQL()->getStudentName($schedule_changes->student_id) . "</h2><br />";
-                foreach ($schedule_changes->schedule_reader->getSpecificChanges() as $specific_change) {
+                foreach ($schedule_changes->file_manager->schedule_reader->getSpecificChanges() as $specific_change) {
                     echo $specific_change . "<br />";
                 }
             } catch (Exception $e) {

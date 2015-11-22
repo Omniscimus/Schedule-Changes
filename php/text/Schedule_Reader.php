@@ -1,8 +1,6 @@
 <?php
 
 require_once 'util/Json_Handler.php';
-require_once 'text/File_Processor.php';
-require_once 'text/Schedule_Organizer.php';
 
 /**
  * Geeft specifieke roosterwijzigingen gebaseerd op de leerling.
@@ -31,7 +29,7 @@ class Schedule_Reader {
     function getGeneralChanges() {
         $general_changes = $this->getGeneralChangesFromFile();
         if ($general_changes === FALSE) {
-            $this->processNewScheduleChanges();
+            $this->schedule_changes_class->file_manager->processNewScheduleChanges();
             $general_changes = $this->getGeneralChangesFromFile();
         }
         return $general_changes;
@@ -47,7 +45,7 @@ class Schedule_Reader {
      */
     private function getGeneralChangesFromFile() {
         try {
-            $general_changes = Json_Handler::readFromJsonFile("schedule-files" . DIRECTORY_SEPARATOR . "json" . DIRECTORY_SEPARATOR . "general.json");
+            $general_changes = Json_Handler::readFromJsonFile($this->schedule_changes_class->file_manager->getJsonFolder() . "general.json");
         } catch (Exception $e) {
             $general_changes = FALSE;
         }
@@ -86,25 +84,11 @@ class Schedule_Reader {
      */
     private function getSpecificChangesFromFile() {
         try {
-            $specific_changes = (array) Json_Handler::readFromJsonFile("schedule-files" . DIRECTORY_SEPARATOR . "json" . DIRECTORY_SEPARATOR . "specific.json");
+            $specific_changes = (array) Json_Handler::readFromJsonFile($this->schedule_changes_class->file_manager->getJsonFolder() . DIRECTORY_SEPARATOR . "specific.json");
         } catch (Exception $e) {
             $specific_changes = FALSE;
         }
         return $specific_changes;
-    }
-
-    /**
-     * Downloadt en verwerkt een nieuw bestand met roosterwijzigingen.
-     */
-    function processNewScheduleChanges() {
-        $file_downloader = new File_Downloader();
-        $file_downloader->deleteOldScheduleFiles();
-        $today = $file_downloader->getTodayNumber();
-        $schedule_file = $file_downloader->downloadScheduleFile($today);
-        $file_processor = new File_Processor($schedule_file);
-        $processed_file = $file_processor->processFile();
-        $schedule_organizer = new Schedule_Organizer($this->schedule_changes_class, $processed_file);
-        $schedule_organizer->readScheduleChanges();
     }
 
 }

@@ -2,12 +2,16 @@
 require_once 'Schedule_Changes.php';
 $config = include 'config.php';
 date_default_timezone_set($config["default_timezone"]);
+// Schakel waarschuwingen uit zodat er geen warning verschijnt als de URL naar
+// het bestand met roosterwijzigingen een 404 response code oplevert.
+//error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+error_reporting(E_ERROR);
 
 if (is_numeric($_GET["studentID"]) && strlen($_GET["studentID"]) === 6) {
-    if (is_int($_GET["weekDay"]) && $_GET["weekDay"] < 7 && $_GET["weekDay"] > -1) {
+    if (isset($_GET["weekDay"]) && $_GET["weekDay"] < 7 && $_GET["weekDay"] > -1) {
         $day = $_GET["weekDay"];
     } else {
-        $day = date("d");
+        $day = date("w");
     }
     $schedule_changes = new Schedule_Changes($_GET["studentID"], $day);
 }
@@ -25,12 +29,22 @@ if (is_numeric($_GET["studentID"]) && strlen($_GET["studentID"]) === 6) {
         if (isset($schedule_changes)) {
             try {
                 echo "<h2>Algemene roosterwijzigingen</h2><br />";
-                foreach ($schedule_changes->file_manager->schedule_reader->getGeneralChanges() as $general_change) {
-                    echo $general_change . "<br />";
+                $general_changes = $schedule_changes->file_manager->schedule_reader->getGeneralChanges();
+                if (!empty($general_changes)) {
+                    foreach ($general_changes as $general_change) {
+                        echo $general_change . "<br />";
+                    }
+                } else {
+                    echo "Er zijn geen algemene roosterwijzigingen voor deze dag.";
                 }
                 echo "<h2>Roosterwijzigingen voor " . $schedule_changes->mySQL->getSchoolSQL()->getStudentName($schedule_changes->student_id) . "</h2><br />";
-                foreach ($schedule_changes->file_manager->schedule_reader->getSpecificChanges() as $specific_change) {
-                    echo $specific_change . "<br />";
+                $specific_changes = $schedule_changes->file_manager->schedule_reader->getSpecificChanges();
+                if (!empty($specific_changes)) {
+                    foreach ($specific_changes as $specific_change) {
+                        echo $specific_change . "<br />";
+                    }
+                } else {
+                    echo "Je hebt geen persoonlijke roosterwijzigingen voor deze dag.";
                 }
             } catch (Exception $e) {
                 echo $e->getMessage();

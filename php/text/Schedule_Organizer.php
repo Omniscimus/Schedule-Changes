@@ -91,8 +91,9 @@ class Schedule_Organizer {
      * @return mixed de schoolklas als hij bestaat; anders FALSE
      */
     private function getSchoolClass($schedule_change) {
+        $proper_schedule_change = html_entity_decode($schedule_change);
         $matches = [];
-        if (preg_match(Schedule_Organizer::$school_class_pattern, $schedule_change, $matches) === 1) {
+        if (preg_match(Schedule_Organizer::$school_class_pattern, $proper_schedule_change, $matches) === 1) {
             $school_class = "";
             foreach (str_split($matches[0]) as $char) {
                 if ($this->isValidSchoolClassCharacter($char)) {

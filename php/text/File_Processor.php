@@ -12,7 +12,6 @@ class File_Processor {
 
     private static $paragraph_tag_pattern;
     private static $pattern;
-    private static $save_folder;
     private $source_file;
     private $target_file;
 
@@ -21,15 +20,12 @@ class File_Processor {
      * 
      * @param string $source_file de naam van het HTML-bestand dat verwerkt
      * moet worden (met .htm extensie)
-     * @param string $target_file de naam van een nieuw aan te maken bestand
-     * waarin de verwerkte wijzigingen terecht moeten komen
      */
     function __construct($source_file) {
         $this->paragraph_tag_pattern = "#<p.+?</p>#";
         $this->pattern = "#>[^<>]+<#";
-        $this->save_folder = File_Manager::getScheduleFilesFolder();
-        $this->source_file = $this->save_folder . $source_file;
-        $this->target_file = $this->save_folder . substr($source_file, 0, strlen($source_file) - 4) . ".txt";
+        $this->source_file = $source_file;
+        $this->target_file = substr($source_file, 0, strlen($source_file) - 4) . ".txt";
     }
 
     /**
@@ -114,7 +110,7 @@ class File_Processor {
     private function polishChanges($schedule_changes) {
         $polished_changes = [];
         foreach ($schedule_changes as $change) {
-            if (strlen($change) !== 0 && substr($change, 0, 23) != "ROOSTERWIJZIGINGEN VOOR") {
+            if (strlen($change) !== 0 && !in_array($change, $polished_changes)) {
                 array_push($polished_changes, $change);
             }
         }

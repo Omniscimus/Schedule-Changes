@@ -26,7 +26,7 @@ class File_Manager {
     function __construct($schedule_changes_class) {
         $this->schedule_changes_class = $schedule_changes_class;
         $this->schedule_files_folder = "schedule-files" . DIRECTORY_SEPARATOR . date("W") . "-" . $schedule_changes_class->day . DIRECTORY_SEPARATOR;
-        $this->json_folder = $this->schedule_files_folder . DIRECTORY_SEPARATOR . "json" . DIRECTORY_SEPARATOR;
+        $this->json_folder = $this->schedule_files_folder . "json" . DIRECTORY_SEPARATOR;
         $this->schedule_reader = new Schedule_Reader($schedule_changes_class);
     }
 
@@ -38,7 +38,7 @@ class File_Manager {
      */
     function getScheduleFilesFolder() {
         if (!file_exists($this->schedule_files_folder)) {
-            echo $this->schedule_files_folder;
+            mkdir($this->schedule_files_folder, 0775, TRUE);
         }
         return $this->schedule_files_folder;
     }
@@ -60,7 +60,7 @@ class File_Manager {
      */
     function processNewScheduleChanges() {
         File_Downloader::deleteOldScheduleFiles();
-        $schedule_file = File_Downloader::downloadScheduleFile($this->day, $this->getScheduleFilesFolder());
+        $schedule_file = File_Downloader::downloadScheduleFile($this->schedule_changes_class->day, $this->getScheduleFilesFolder());
         $file_processor = new File_Processor($schedule_file);
         $processed_file = $file_processor->processFile();
         $schedule_organizer = new Schedule_Organizer($this->schedule_changes_class, $processed_file);

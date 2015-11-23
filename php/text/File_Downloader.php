@@ -17,13 +17,20 @@ class File_Downloader {
      * @param string $url een URL naar het bestand
      * @param string $target_folder het pad naar de map waar het bestand in moet
      * komen
+     * @throws Exception als het bestand niet gedownload kon worden,
+     * bijvoorbeeld door een 404 response code.
      */
     static function downloadFile($url, $target_folder) {
         $file_name = substr($url, strrpos($url, "/") + 1, strlen($url));
         $target_path = $target_folder . DIRECTORY_SEPARATOR . $file_name;
-        $new_file = mb_convert_encoding(file_get_contents($url), "UTF-8");
-        if ($new_file !== FALSE) {
-            file_put_contents($target_path, $new_file);
+        $remote_file = file_get_contents($url);
+        if ($remote_file !== FALSE) {
+            $new_file = mb_convert_encoding($remote_file, "UTF-8");
+            if ($new_file !== FALSE) {
+                file_put_contents($target_path, $new_file);
+            }
+        } else {
+            throw new Exception("Bestand niet beschikbaar.");
         }
     }
 

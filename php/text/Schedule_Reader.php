@@ -27,10 +27,14 @@ class Schedule_Reader {
      * @return array een lijst met algemene roosterwijzigingen
      */
     function getGeneralChanges() {
-        $general_changes = $this->getGeneralChangesFromFile();
-        if ($general_changes === FALSE) {
-            $this->schedule_changes_class->file_manager->processNewScheduleChanges();
+        try {
             $general_changes = $this->getGeneralChangesFromFile();
+            if ($general_changes === FALSE) {
+                $this->schedule_changes_class->file_manager->processNewScheduleChanges();
+                $general_changes = $this->getGeneralChangesFromFile();
+            }
+        } catch (Exception $e) {
+            $general_changes = ["Er zijn nog geen roosterwijzigingen bekend voor deze dag."];
         }
         return $general_changes;
     }
@@ -60,17 +64,21 @@ class Schedule_Reader {
     function getSpecificChanges() {
         $student_ID = $this->schedule_changes_class->student_id;
         $specific_changes = $this->getSpecificChangesFromFile();
-        if ($specific_changes === FALSE) {
-            $this->processNewScheduleChanges();
-            $specific_changes = $this->getSpecificChangesFromFile();
-        }
-        $student_classes = $this->schedule_changes_class->mySQL->getSchoolSQL()->getSchoolClasses($student_ID);
         $student_changes = [];
-        $classes = array_keys($specific_changes);
-        foreach ($classes as $school_class) {
-            if (in_array($school_class, $student_classes)) {
-                $student_changes = array_merge($student_changes, $specific_changes[$school_class]);
+        try {
+            if ($specific_changes === FALSE) {
+                $this->schedule_changes_class->file_manager->processNewScheduleChanges();
+                $specific_changes = $this->getSpecificChangesFromFile();
             }
+            $student_classes = $this->schedule_changes_class->mySQL->getSchoolSQL()->getSchoolClasses($student_ID);
+            $classes = array_keys($specific_changes);
+            foreach ($classes as $school_class) {
+                if (in_array($school_class, $student_classes)) {
+                    $student_changes = array_merge($student_changes, $specific_changes[$school_class]);
+                }
+            }
+        } catch (Exception $e) {
+            array_push($student_changes, "Er zijn nog geen roosterwijzigingen bekend voor deze dag.");
         }
         return $student_changes;
     }

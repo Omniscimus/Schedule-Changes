@@ -155,7 +155,7 @@ public class SchoolSQL {
 	ArrayList<String> klassen = new ArrayList<>();
 
 	while (resultSet.next()) {
-	    klassen.add(resultSet.getString("klas"));
+	    klassen.add(resultSet.getString("klas").toLowerCase());
 	}
 
 	return klassen;
@@ -175,7 +175,7 @@ public class SchoolSQL {
 	    if (possibleSchoolClasses == null) {
 		possibleSchoolClasses = getAllSchoolClasses();
 	    }
-	    return possibleSchoolClasses.contains(schoolClass);
+	    return possibleSchoolClasses.contains(schoolClass.toLowerCase());
 	} catch (SQLException | ClassNotFoundException e) {
 	    return false;
 	}

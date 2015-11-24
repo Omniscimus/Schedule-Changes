@@ -120,11 +120,12 @@ public class ConfigurationManager {
 	destination.createNewFile();
 
 	OutputStream os;
-	// Haal de default config.txt uit de .jar
-	try (InputStream is = ConfigurationManager.class.getResourceAsStream(File.separator + "config.txt")) {
+	// Haal de default config.txt uit de .jar. Gebruik hier niet
+	// File.separator omdat het hier niet gaat om bestandsnamen maar om Java
+	// packages.
+	try (InputStream is = Roosterwijzigingen.class.getResourceAsStream("/config.txt")) {
 	    int readBytes;
 	    byte[] buffer = new byte[4096];
-	    String jarFolder = new File(ConfigurationManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/');
 	    // Kopieer naar destination
 	    os = new FileOutputStream(destination.getAbsolutePath());
 	    while ((readBytes = is.read(buffer)) > 0) {

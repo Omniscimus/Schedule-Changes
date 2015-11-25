@@ -5,6 +5,9 @@ build/
 .classpath
 .project
 
+# Intellij
+.idea/
+
 # Mac OS X
 .DS_Store
 .Trashes

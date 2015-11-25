@@ -4,12 +4,30 @@
         <title>Roosterwijzigingen</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Foundation and custom stylesheets -->
+        <link rel="stylesheet" type="text/css" href="foundation/css/foundation.css">
+        <link rel="stylesheet" type="text/css" href="foundation/css/schedule-changes.css">
     </head>
     <body>
-        <form action="changes.php" method="get">
-            <h1>Roosterwijzigingen</h1><br />
-            Leerlingnummer: <input type="text" name="studentID" /><br />
-            <input type="submit" />
-        </form>
+    <div style="position: relative; top:25%;">
+        <div class="row">
+            <div class="medium-6 large-4 medium-centered columns">
+                <div class="login">
+                    <!-- The actual form -->
+                    <form action="changes.php" method="get">
+                        <h3>Roosterwijzigingen</h3>
+
+                        <label style="color: white;">
+                            Leerlingnummer
+                            <input type="text" name="studentID" />
+                        </label>
+
+                        <input type="submit" value="Check roosterwijzigingen" class="button"  /> <!-- Value moet mogelijk worden veranderd -->
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
     </body>
 </html>

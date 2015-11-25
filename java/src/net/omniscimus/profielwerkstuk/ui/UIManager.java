@@ -70,6 +70,29 @@ public class UIManager {
     }
 
     /**
+     * Sluit de User Interface af.
+     */
+    public void stop() {
+	homescreenTimer.cancel();
+	if (homescreenFrame != null) {
+	    homescreenFrame.dispose();
+	}
+	if (registerFrame != null) {
+	    registerFrame.dispose();
+	}
+	if (identifyFrame != null) {
+	    identifyFrame.dispose();
+	}
+	if (scheduleFrame != null) {
+	    scheduleFrame.dispose();
+	}
+	if (helpFrame != null) {
+	    helpFrame.dispose();
+	}
+
+    }
+
+    /**
      * Laat het homescreen zien.
      */
     public void showHomescreen() {

@@ -22,6 +22,8 @@ public class DownloadScheduler {
 	this.fileManager = fileManager;
     }
 
+    private Timer timer;
+
     /**
      * Geeft de manager van de bestanden met roosterwijzigingen.
      *
@@ -36,10 +38,17 @@ public class DownloadScheduler {
      * roosterwijzigingen, en check ook nu.
      */
     public void startScheduling() {
-	Timer timer = new Timer();
+	timer = new Timer();
 	FileFetcher fileFetcher = new FileFetcher(this);
 	fileFetcher.run();
 	timer.scheduleAtFixedRate(fileFetcher, timeToNextHour(), 1000 * 60 * 60);
+    }
+
+    /**
+     * Stopt alle geplande downloads.
+     */
+    public void stopScheduling() {
+	timer.cancel();
     }
 
     /**

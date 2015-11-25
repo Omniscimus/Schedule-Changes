@@ -23,6 +23,8 @@ public class PingManager {
 	this.networkManager = networkManager;
     }
 
+    private PingableIPsProducer producerTask;
+    private PingableIPsConsumer consumerTask;
     private final BlockingQueue<InetAddress> pingQueue = new ArrayBlockingQueue<>(3);
 
     /**
@@ -39,11 +41,21 @@ public class PingManager {
      * threads te starten, en geef de hosts die up zijn door aan de UI.
      */
     public void startPinging() {
-	Thread producerThread = new Thread(new PingableIPsProducer(this, networkManager.getHotspotIP()));
+	producerTask = new PingableIPsProducer(this, networkManager.getHotspotIP());
+	Thread producerThread = new Thread(producerTask);
 	producerThread.start();
 
-	Thread consumerThread = new Thread(new PingableIPsConsumer(this));
+	consumerTask = new PingableIPsConsumer(this);
+	Thread consumerThread = new Thread(consumerTask);
 	consumerThread.start();
+    }
+
+    /**
+     * Stop de Producer/Consumer threads die hosts op het netwerk pingen.
+     */
+    public void stopPinging() {
+	producerTask.stop();
+	consumerTask.stop();
     }
 
 }

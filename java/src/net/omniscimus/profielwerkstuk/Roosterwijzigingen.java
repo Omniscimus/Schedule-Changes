@@ -70,7 +70,7 @@ public class Roosterwijzigingen {
 	} catch (IOException | URISyntaxException ex) {
 	    Logger.getLogger(Roosterwijzigingen.class.getName()).log(
 		    Level.SEVERE, "Configuratie kon niet geladen worden", ex);
-	    crash("Kon de configuratie niet laden.");
+	    shutdown("Kon de configuratie niet laden.", false);
 	}
 
 	// Start de MySQL verbinding.
@@ -79,7 +79,7 @@ public class Roosterwijzigingen {
 	} catch (SQLException | ClassNotFoundException ex) {
 	    Logger.getLogger(Roosterwijzigingen.class.getName()).log(
 		    Level.SEVERE, "MySQL kon niet geladen worden", ex);
-	    crash(ex.getMessage());
+	    shutdown(ex.getMessage(), false);
 	}
 
 	// Start een scheduler die elk uur kijkt of er een nieuw bestand is op de server
@@ -97,12 +97,32 @@ public class Roosterwijzigingen {
     }
 
     /**
-     * Stopt het programma geforceerd.
+     * Stopt het programma.
      *
-     * @param error een bericht met de reden voor de crash
+     * @param error een bericht met de reden voor de shutdown
+     * @param force true als het programma onmiddelijk moet worden afgesloten;
+     * anders false
      */
-    public void crash(String error) {
+    public void shutdown(String error, boolean force) {
 	System.out.println(error);
+	shutdown(force);
+    }
+
+    /**
+     * Stopt het programma.
+     * 
+     * @param force true als het programma onmiddelijk moet worden afgesloten;
+     * anders false
+     */
+    public void shutdown(boolean force) {
+	if (!force) {
+	    networkManager.stop();
+	    uiManager.stop();
+	    fileManager.stop();
+	    if (mySQLManager != null) {
+		mySQLManager.closeConnection();
+	    }
+	}
 	System.exit(0);
     }
 

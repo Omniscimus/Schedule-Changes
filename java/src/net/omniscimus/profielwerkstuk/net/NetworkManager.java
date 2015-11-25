@@ -42,15 +42,20 @@ public class NetworkManager {
      * Laadt de hotspot implementatie en start ping scans.
      */
     public void load() {
-
 	if (!reloadHotspotInterface()) {
-	    roosterwijzigingen.crash("Kon de interface van de hotspot niet vinden! (" + ConfigValueCache.getHotspotInterface() + ")");
+	    roosterwijzigingen.shutdown("Kon de interface van de hotspot niet vinden! (" + ConfigValueCache.getHotspotInterface() + ")", false);
 	}
 	reloadHotspotIP();
 
 	pingManager = new PingManager(this);
 	pingManager.startPinging();
+    }
 
+    /**
+     * Sluit de netwerkfunctionaliteit af.
+     */
+    public void stop() {
+	pingManager.stopPinging();
     }
 
     /**

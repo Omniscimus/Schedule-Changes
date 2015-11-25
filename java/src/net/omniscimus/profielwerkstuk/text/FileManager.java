@@ -15,7 +15,7 @@ public class FileManager {
 
     /**
      * Maakt een nieuwe FileManager.
-     * 
+     *
      * @param rw de basis van dit programma
      */
     public FileManager(Roosterwijzigingen rw) {
@@ -49,6 +49,13 @@ public class FileManager {
      */
     public void load() {
 	downloadScheduler.startScheduling();
+    }
+
+    /**
+     * Stopt operaties die nu bezig zijn.
+     */
+    public void stop() {
+	downloadScheduler.stopScheduling();
     }
 
 }

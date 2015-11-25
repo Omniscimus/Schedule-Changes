@@ -36,12 +36,13 @@ public class PingableIPsConsumer implements Runnable {
 	this.pingerPool = Executors.newCachedThreadPool();
     }
 
+    private volatile boolean running;
     private List<Future<String>> pingResults;
 
     @Override
     public void run() {
 	pingResults = Collections.synchronizedList(new ArrayList<Future<String>>());
-	while (true) {
+	while (running) {
 	    try {
 		if (pingResults.size() < 50) {
 		    InetAddress ipToPing = pingManager.getPingQueue().take();
@@ -53,6 +54,14 @@ public class PingableIPsConsumer implements Runnable {
 		Logger.getLogger(PingableIPsConsumer.class.getName()).log(Level.SEVERE, null, ex);
 	    }
 	}
+    }
+
+    /**
+     * Stopt deze Consumer taak.
+     */
+    public void stop() {
+	running = false;
+	pingerPool.shutdownNow();
     }
 
     /**

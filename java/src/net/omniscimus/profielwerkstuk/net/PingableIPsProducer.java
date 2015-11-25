@@ -30,10 +30,12 @@ public class PingableIPsProducer implements Runnable {
 	this.routerIPBytes = routerIP.getAddress();
     }
 
+    private volatile boolean running;
+
     @Override
     public void run() {
 
-	while (true) {
+	while (running) {
 	    for (int i = 1; i < 256; i++) {
 		if (i != routerIPBytes[3]) {
 		    // Bepaal voor elke host die gescand moet worden, het IP-adres
@@ -54,6 +56,13 @@ public class PingableIPsProducer implements Runnable {
 	    }
 	}
 
+    }
+
+    /**
+     * Stopt deze Producer taak.
+     */
+    public void stop() {
+	running = false;
     }
 
 }

@@ -3,6 +3,8 @@ package net.omniscimus.profielwerkstuk.mysql;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.omniscimus.profielwerkstuk.configuration.ConfigValueCache;
 
 /**
@@ -91,6 +93,19 @@ public class MySQLManager {
 	    return connection;
 	} else {
 	    return openConnection();
+	}
+    }
+
+    /**
+     * Sluit de verbinding met de MySQL-database.
+     */
+    public void closeConnection() {
+	try {
+	    if (connection != null && !connection.isClosed() && connection.isValid(3)) {
+		connection.close();
+	    }
+	} catch (SQLException ex) {
+	    Logger.getLogger(MySQLManager.class.getName()).log(Level.SEVERE, null, ex);
 	}
     }
 

@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import net.omniscimus.profielwerkstuk.configuration.ConfigValueCache;
 
 /**
  * De Frame waarin knoppen met de namen van de leerlingen staan wiens device
@@ -68,7 +69,7 @@ public class HomescreenFrame extends JFrame {
 	GridBagConstraints buttonPanelConstraints = new GridBagConstraints();
 	buttonPanelConstraints.ipady = 10;
 	getContentPane().add(buttonPanel, buttonPanelConstraints);
-	
+
 	help = new JButton();
 	help.setText("Help");
 	help.addActionListener(new AbstractAction() {
@@ -80,7 +81,7 @@ public class HomescreenFrame extends JFrame {
 	    }
 	});
 	buttonPanel.add(help);
-	
+
 	register = new JButton();
 	register.setText("Registreren");
 	GridBagConstraints registerConstraints = new GridBagConstraints();
@@ -120,7 +121,12 @@ public class HomescreenFrame extends JFrame {
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
 		try {
-		    uiManager.showScheduleFrame(Integer.parseInt(e.getActionCommand()));
+		    int number = Integer.parseInt(e.getActionCommand());
+		    if (number != ConfigValueCache.getAdminCode()) {
+			uiManager.showScheduleFrame(number);
+		    } else {
+			uiManager.getRoosterwijzigingen().shutdown(false);
+		    }
 		} catch (NumberFormatException ignored) {
 		}
 		studentID.setText("");

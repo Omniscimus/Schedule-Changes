@@ -49,7 +49,7 @@ public class ConfigurationManager {
 		    try {
 			ConfigValueCache.setScanDelay(Long.parseLong(line.replace("scan-delay: ", "")));
 		    } catch (NumberFormatException e) {
-			roosterwijzigingen.crash("Kon scan-delay niet correct lezen uit de config! (" + line + ")");
+			roosterwijzigingen.shutdown("Kon scan-delay niet correct lezen uit de config! (" + line + ")", false);
 		    }
 		} else if (line.startsWith("ping-timeout")) {
 		    ConfigValueCache.setPingTimeout(Integer.parseInt(line.replace("ping-timeout: ", "")));
@@ -63,11 +63,17 @@ public class ConfigurationManager {
 		    ConfigValueCache.setSQLUsername(line.replace("mysql-username: ", ""));
 		} else if (line.startsWith("mysql-password")) {
 		    ConfigValueCache.setSQLPassword(line.replace("mysql-password: ", ""));
+		} else if (line.startsWith("admin-code")) {
+		    try {
+			ConfigValueCache.setAdminCode(Integer.parseInt(line.replace("admin-code: ", "")));
+		    } catch (NumberFormatException e) {
+			roosterwijzigingen.shutdown("Kon de admin code niet lezen uit de config! (" + line + ")", false);
+		    }
 		}
 	    }
 	} catch (IOException e) {
 	    Logger.getLogger(Roosterwijzigingen.class.getName()).log(Level.SEVERE, "Het configuratiebestand kon niet geladen worden.", e);
-	    roosterwijzigingen.crash("Kon het configuratiebestand niet lezen!");
+	    roosterwijzigingen.shutdown("Kon het configuratiebestand niet lezen!", false);
 	}
 
     }

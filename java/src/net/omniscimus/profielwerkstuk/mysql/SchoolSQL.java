@@ -34,8 +34,8 @@ public class SchoolSQL {
      * Zoekt de leerlingnummers op die horen bij de opgegeven voor- en
      * achternaam.
      *
-     * @param voornaam de voornaam van de leerling
-     * @param achternaam de achternaam van de leerling
+     * @param firstName de voornaam van de leerling
+     * @param surname de achternaam van de leerling
      * @return een lijst met gevonden leerlingnummers (mogelijk zijn er meerdere
      * leerlingen met dezelfde naam). Deze lijst is leeg als er niemand gevonden
      * is met deze voor- en achternaam.
@@ -44,15 +44,15 @@ public class SchoolSQL {
      * @throws ClassNotFoundException als het stuurprogramma voor de MySQL
      * server niet gevonden kon worden
      */
-    public ArrayList<Integer> getLeerlingnummer(String voornaam, String achternaam)
+    public ArrayList<Integer> getStudentID(String firstName, String surname)
 	    throws SQLException, ClassNotFoundException {
 
 	ArrayList<Integer> leerlingnummers = new ArrayList<>();
 
 	PreparedStatement preparedStatement = mySQLManager.getConnection()
 		.prepareStatement("SELECT leerlingnummer FROM school.leerlingen WHERE voornaam = ? AND achternaam = ?;");
-	preparedStatement.setString(1, voornaam);
-	preparedStatement.setString(2, achternaam);
+	preparedStatement.setString(1, firstName);
+	preparedStatement.setString(2, surname);
 	ResultSet resultSet = preparedStatement.executeQuery();
 
 	while (resultSet.next()) {
@@ -70,7 +70,7 @@ public class SchoolSQL {
      * Zoekt de naam van een leerling op aan de hand van zijn/haar
      * leerlingnummer.
      *
-     * @param leerlingnummer het leerlingnummer van de leerling wiens naam
+     * @param studentID het leerlingnummer van de leerling wiens naam
      * opgezocht moet worden
      * @return de voornaam en achternaam van de leerling, in het formaat
      * Voornaam Achternaam, of slechts een van die als de ander niet in de
@@ -80,12 +80,12 @@ public class SchoolSQL {
      * @throws ClassNotFoundException als het stuurprogramma voor de MySQL
      * server niet gevonden kon worden
      */
-    public String getStudentName(int leerlingnummer)
+    public String getStudentName(int studentID)
 	    throws SQLException, ClassNotFoundException {
 
 	Statement statement = mySQLManager.getConnection().createStatement();
 	ResultSet resultSet = statement
-		.executeQuery("SELECT voornaam,achternaam FROM school.leerlingen WHERE leerlingnummer = " + leerlingnummer + ";");
+		.executeQuery("SELECT voornaam,achternaam FROM school.leerlingen WHERE leerlingnummer = " + studentID + ";");
 
 	if (resultSet.next()) {
 	    String voornaam = resultSet.getString("voornaam");
@@ -109,7 +109,7 @@ public class SchoolSQL {
     /**
      * Zoekt alle klassen op waar een leerling in zit.
      *
-     * @param leerlingnummer het nummer van de leerling waarvan de klassen
+     * @param studentID het nummer van de leerling waarvan de klassen
      * opgezocht moeten worden
      * @return een lijst met klassen waar de leerling in zit
      * @throws SQLException als er geen toegang tot de database verkregen kon
@@ -117,12 +117,12 @@ public class SchoolSQL {
      * @throws ClassNotFoundException als het stuurprogramma voor de MySQL
      * server niet gevonden kon worden
      */
-    public ArrayList<String> getSchoolClasses(int leerlingnummer)
+    public ArrayList<String> getSchoolClasses(int studentID)
 	    throws SQLException, ClassNotFoundException {
 
 	Statement statement = mySQLManager.getConnection().createStatement();
 	ResultSet resultSet = statement
-		.executeQuery("SELECT klas FROM school.klassen WHERE leerlingnummer = " + leerlingnummer + ";");
+		.executeQuery("SELECT klas FROM school.klassen WHERE leerlingnummer = " + studentID + ";");
 
 	ArrayList<String> klassen = new ArrayList<>();
 

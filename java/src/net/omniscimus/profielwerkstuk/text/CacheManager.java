@@ -2,7 +2,7 @@ package net.omniscimus.profielwerkstuk.text;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import net.omniscimus.profielwerkstuk.Roosterwijzigingen;
+import net.omniscimus.profielwerkstuk.ScheduleChanges;
 
 /**
  * Manager voor de ScheduleChangesCaches van verschillende dagen waarin de
@@ -12,27 +12,27 @@ import net.omniscimus.profielwerkstuk.Roosterwijzigingen;
  */
 public class CacheManager {
 
-    private final Roosterwijzigingen rw;
+    private final ScheduleChanges sc;
 
     /**
      * Maakt een nieuwe CacheManager.
      *
      * @param rw de basis van dit programma
      */
-    public CacheManager(Roosterwijzigingen rw) {
-	this.rw = rw;
+    public CacheManager(ScheduleChanges rw) {
+	this.sc = rw;
     }
 
     private ScheduleChangesCache todayCache;
     private ScheduleChangesCache tomorrowCache;
 
     /**
-     * Geeft de Roosterwijzigingen instance die dit programma heeft gestart.
+     * Geeft de ScheduleChanges instance die dit programma heeft gestart.
      *
-     * @return de gebruikte instance van Roosterwijzigingen
+     * @return de gebruikte instance van ScheduleChanges
      */
-    public Roosterwijzigingen getRoosterwijzigingen() {
-	return rw;
+    public ScheduleChanges getRoosterwijzigingen() {
+	return sc;
     }
 
     /**
@@ -101,7 +101,7 @@ public class CacheManager {
 	ScheduleChangesCache cacheToUse = getScheduleCache(today);
 	if (cacheToUse != null) {
 	    ArrayList<String> schoolClasses
-		    = rw.getMySQLManager().getSchoolSQL()
+		    = sc.getMySQLManager().getSchoolSQL()
 		    .getSchoolClasses(studentID);
 
 	    ArrayList<String> scheduleChanges = new ArrayList<>();

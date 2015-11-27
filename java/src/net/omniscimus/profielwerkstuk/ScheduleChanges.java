@@ -16,7 +16,7 @@ import net.omniscimus.profielwerkstuk.text.FileManager;
  *
  * @author omniscimus
  */
-public class Roosterwijzigingen {
+public class ScheduleChanges {
 
     private ConfigurationManager configurationManager;
     private FileManager fileManager;
@@ -27,7 +27,7 @@ public class Roosterwijzigingen {
     /**
      * Een statisch toegangspunt voor dit programma.
      */
-    public static Roosterwijzigingen rw;
+    public static ScheduleChanges sc;
 
     /**
      * Geeft de DownloadScheduler van dit programma.
@@ -63,7 +63,7 @@ public class Roosterwijzigingen {
 		    break;
 	    }
 	}
-	new Roosterwijzigingen().initiate();
+	new ScheduleChanges().initiate();
     }
 
     /**
@@ -71,14 +71,14 @@ public class Roosterwijzigingen {
      */
     public void initiate() {
 
-	rw = this;
+	sc = this;
 
 	// Load de config values.
 	configurationManager = new ConfigurationManager(this);
 	try {
 	    configurationManager.loadConfig();
 	} catch (IOException | URISyntaxException ex) {
-	    Logger.getLogger(Roosterwijzigingen.class.getName()).log(
+	    Logger.getLogger(ScheduleChanges.class.getName()).log(
 		    Level.SEVERE, "Configuratie kon niet geladen worden", ex);
 	    shutdown("Kon de configuratie niet laden.", false);
 	}
@@ -87,7 +87,7 @@ public class Roosterwijzigingen {
 	try {
 	    mySQLManager = new MySQLManager();
 	} catch (SQLException | ClassNotFoundException ex) {
-	    Logger.getLogger(Roosterwijzigingen.class.getName()).log(
+	    Logger.getLogger(ScheduleChanges.class.getName()).log(
 		    Level.SEVERE, "MySQL kon niet geladen worden", ex);
 	    shutdown(ex.getMessage(), false);
 	}

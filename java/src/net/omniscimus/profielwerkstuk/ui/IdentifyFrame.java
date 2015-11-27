@@ -174,14 +174,14 @@ public class IdentifyFrame extends JFrame {
 		String achternaam = surname.getText();
 		try {
 		    MySQLManager mySQLManager = uiManager.getRoosterwijzigingen().getMySQLManager();
-		    ArrayList<Integer> possibleLeerlingnummers = mySQLManager.getSchoolSQL().getLeerlingnummer(voornaam, achternaam);
+		    ArrayList<Integer> possibleLeerlingnummers = mySQLManager.getSchoolSQL().getStudentID(voornaam, achternaam);
 		    switch (possibleLeerlingnummers.size()) {
 			case 0:
 			    errorMessage.setText("Niet gevonden.");
 			    break;
 			case 1:
-			    mySQLManager.getRoosterwijzigingenSQL().deleteUser(macAddressToRegister);
-			    mySQLManager.getRoosterwijzigingenSQL().saveNewUser(possibleLeerlingnummers.get(0), macAddressToRegister);
+			    mySQLManager.getScheduleChangesSQL().deleteUser(macAddressToRegister);
+			    mySQLManager.getScheduleChangesSQL().saveNewUser(possibleLeerlingnummers.get(0), macAddressToRegister);
 			    errorMessage.setText("Gefeliciteerd, je bent nu geregistreerd!");
 			    break;
 			default:

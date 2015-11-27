@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.omniscimus.profielwerkstuk.Roosterwijzigingen;
+import net.omniscimus.profielwerkstuk.ScheduleChanges;
 
 /**
  * Zorgt voor het lezen van en schrijven naar de config.
@@ -19,16 +19,16 @@ import net.omniscimus.profielwerkstuk.Roosterwijzigingen;
  */
 public class ConfigurationManager {
 
-    private final Roosterwijzigingen roosterwijzigingen;
+    private final ScheduleChanges scheduleChanges;
     private File configFile;
 
     /**
      * Maakt een nieuwe ConfigurationManager.
      *
-     * @param roosterwijzigingen de basis van het programma
+     * @param scheduleChanges de basis van het programma
      */
-    public ConfigurationManager(Roosterwijzigingen roosterwijzigingen) {
-	this.roosterwijzigingen = roosterwijzigingen;
+    public ConfigurationManager(ScheduleChanges scheduleChanges) {
+	this.scheduleChanges = scheduleChanges;
     }
 
     /**
@@ -49,7 +49,7 @@ public class ConfigurationManager {
 		    try {
 			ConfigValueCache.setScanDelay(Long.parseLong(line.replace("scan-delay: ", "")));
 		    } catch (NumberFormatException e) {
-			roosterwijzigingen.shutdown("Kon scan-delay niet correct lezen uit de config! (" + line + ")", false);
+			scheduleChanges.shutdown("Kon scan-delay niet correct lezen uit de config! (" + line + ")", false);
 		    }
 		} else if (line.startsWith("ping-timeout")) {
 		    ConfigValueCache.setPingTimeout(Integer.parseInt(line.replace("ping-timeout: ", "")));
@@ -67,13 +67,13 @@ public class ConfigurationManager {
 		    try {
 			ConfigValueCache.setAdminCode(Integer.parseInt(line.replace("admin-code: ", "")));
 		    } catch (NumberFormatException e) {
-			roosterwijzigingen.shutdown("Kon de admin code niet lezen uit de config! (" + line + ")", false);
+			scheduleChanges.shutdown("Kon de admin code niet lezen uit de config! (" + line + ")", false);
 		    }
 		}
 	    }
 	} catch (IOException e) {
-	    Logger.getLogger(Roosterwijzigingen.class.getName()).log(Level.SEVERE, "Het configuratiebestand kon niet geladen worden.", e);
-	    roosterwijzigingen.shutdown("Kon het configuratiebestand niet lezen!", false);
+	    Logger.getLogger(ScheduleChanges.class.getName()).log(Level.SEVERE, "Het configuratiebestand kon niet geladen worden.", e);
+	    scheduleChanges.shutdown("Kon het configuratiebestand niet lezen!", false);
 	}
 
     }
@@ -129,7 +129,7 @@ public class ConfigurationManager {
 	// Haal de default config.txt uit de .jar. Gebruik hier niet
 	// File.separator omdat het hier niet gaat om bestandsnamen maar om Java
 	// packages.
-	try (InputStream is = Roosterwijzigingen.class.getResourceAsStream("/config.txt")) {
+	try (InputStream is = ScheduleChanges.class.getResourceAsStream("/config.txt")) {
 	    int readBytes;
 	    byte[] buffer = new byte[4096];
 	    // Kopieer naar destination

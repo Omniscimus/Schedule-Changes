@@ -1,6 +1,6 @@
 package net.omniscimus.profielwerkstuk.text;
 
-import net.omniscimus.profielwerkstuk.Roosterwijzigingen;
+import net.omniscimus.profielwerkstuk.ScheduleChanges;
 
 /**
  * Manager voor de bestanden met roosterwijzigingen.
@@ -18,7 +18,7 @@ public class FileManager {
      *
      * @param rw de basis van dit programma
      */
-    public FileManager(Roosterwijzigingen rw) {
+    public FileManager(ScheduleChanges rw) {
 	cacheManager = new CacheManager(rw);
 	nehalenniaFileReader = new NehalenniaFileReader(cacheManager);
 	downloadScheduler = new DownloadScheduler(this);

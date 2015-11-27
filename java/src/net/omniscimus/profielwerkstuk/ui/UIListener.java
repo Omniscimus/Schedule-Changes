@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import net.omniscimus.profielwerkstuk.Roosterwijzigingen;
+import net.omniscimus.profielwerkstuk.ScheduleChanges;
 import net.omniscimus.profielwerkstuk.MACAddressListener;
 
 /**
@@ -14,7 +14,7 @@ import net.omniscimus.profielwerkstuk.MACAddressListener;
  */
 public class UIListener implements MACAddressListener {
 
-    private final Roosterwijzigingen rw;
+    private final ScheduleChanges sc;
     private final UIManager uiManager;
 
     /**
@@ -23,8 +23,8 @@ public class UIListener implements MACAddressListener {
      * @param rw de basis van dit programma
      * @param uiManager de UIManager die deze Listener controleert
      */
-    public UIListener(Roosterwijzigingen rw, UIManager uiManager) {
-	this.rw = rw;
+    public UIListener(ScheduleChanges rw, UIManager uiManager) {
+	this.sc = rw;
 	this.uiManager = uiManager;
     }
 
@@ -41,7 +41,7 @@ public class UIListener implements MACAddressListener {
 	    ((RegisterFrame) currentFrame).addButton(ip, mac);
 	} else if (currentFrame instanceof HomescreenFrame) {
 	    try {
-		String studentName = rw.getMySQLManager().getDatabaseLink().getNameByMACAddress(mac);
+		String studentName = sc.getMySQLManager().getDatabaseLink().getNameByMACAddress(mac);
 		if (studentName != null) {
 		    ((HomescreenFrame) currentFrame).addButton(studentName, mac);
 		}

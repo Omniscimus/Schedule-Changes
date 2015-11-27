@@ -6,7 +6,7 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.omniscimus.profielwerkstuk.Roosterwijzigingen;
+import net.omniscimus.profielwerkstuk.ScheduleChanges;
 import net.omniscimus.profielwerkstuk.configuration.ConfigValueCache;
 
 /**
@@ -16,15 +16,15 @@ import net.omniscimus.profielwerkstuk.configuration.ConfigValueCache;
  */
 public class NetworkManager {
 
-    private final Roosterwijzigingen roosterwijzigingen;
+    private final ScheduleChanges scheduleChanges;
 
     /**
      * Maakt een nieuwe NetworkManager.
      *
-     * @param roosterwijzigingen de basis van dit programma
+     * @param scheduleChanges de basis van dit programma
      */
-    public NetworkManager(Roosterwijzigingen roosterwijzigingen) {
-	this.roosterwijzigingen = roosterwijzigingen;
+    public NetworkManager(ScheduleChanges scheduleChanges) {
+	this.scheduleChanges = scheduleChanges;
     }
 
     private PingManager pingManager;
@@ -45,7 +45,7 @@ public class NetworkManager {
      */
     public void load() {
 	if (!reloadHotspotInterface()) {
-	    roosterwijzigingen.shutdown("Kon de interface van de hotspot niet vinden! (" + ConfigValueCache.getHotspotInterface() + ")", false);
+	    scheduleChanges.shutdown("Kon de interface van de hotspot niet vinden! (" + ConfigValueCache.getHotspotInterface() + ")", false);
 	}
 	reloadHotspotIP();
 

@@ -12,7 +12,7 @@ import java.sql.Statement;
  *
  * @author omniscimus
  */
-public class RoosterwijzigingenSQL {
+public class ScheduleChangesSQL {
 
     private final MySQLManager mySQLManager;
 
@@ -26,7 +26,7 @@ public class RoosterwijzigingenSQL {
      * @throws ClassNotFoundException als het stuurprogramma voor de MySQL
      * server niet gevonden kon worden
      */
-    public RoosterwijzigingenSQL(MySQLManager mySQLManager) throws SQLException, ClassNotFoundException {
+    public ScheduleChangesSQL(MySQLManager mySQLManager) throws SQLException, ClassNotFoundException {
 	this.mySQLManager = mySQLManager;
 	try (Statement databaseCreator = mySQLManager.getConnection().createStatement()) {
 	    databaseCreator.executeUpdate("CREATE DATABASE IF NOT EXISTS roosterwijzigingen;");
@@ -42,19 +42,19 @@ public class RoosterwijzigingenSQL {
     /**
      * Slaat een nieuwe leerling met zijn/haar MAC-adres op in de database.
      *
-     * @param leerlingnummer het leerlingnummer van de leerling
-     * @param macAdres het te registreren MAC-adres van de leerling
+     * @param studentID het leerlingnummer van de leerling
+     * @param macAddress het te registreren MAC-adres van de leerling
      * @throws SQLException als er geen toegang tot de database verkregen kon
      * worden
      * @throws ClassNotFoundException als het stuurprogramma voor de MySQL
      * server niet gevonden kon worden
      */
-    public void saveNewUser(int leerlingnummer, String macAdres) throws SQLException, ClassNotFoundException {
+    public void saveNewUser(int studentID, String macAddress) throws SQLException, ClassNotFoundException {
 
 	try (PreparedStatement preparedStatement = mySQLManager.getConnection()
 		.prepareStatement("INSERT INTO roosterwijzigingen.leerlingen (leerlingnummer, macadres) VALUES (?, ?);")) {
-	    preparedStatement.setInt(1, leerlingnummer);
-	    preparedStatement.setString(2, macAddressToDatabase(macAdres));
+	    preparedStatement.setInt(1, studentID);
+	    preparedStatement.setString(2, macAddressToDatabase(macAddress));
 	    preparedStatement.executeUpdate();
 
 	    // INSERT INTO roosterwijzigingen.leerlingen (leerlingnummer, macadres)
@@ -67,22 +67,22 @@ public class RoosterwijzigingenSQL {
     /**
      * Verwijdert de registratie van de leerling met het gegeven MAC-adres.
      *
-     * @param macAdres het MAC-adres van de leerling
+     * @param macAddress het MAC-adres van de leerling
      * @throws SQLException als er geen toegang tot de database verkregen kon
      * worden
      * @throws ClassNotFoundException als het stuurprogramma voor de MySQL
      * server niet gevonden kon worden
      */
-    public void deleteUser(String macAdres) throws SQLException, ClassNotFoundException {
+    public void deleteUser(String macAddress) throws SQLException, ClassNotFoundException {
 	try (Statement deleteStatement = mySQLManager.getConnection().createStatement()) {
-	    deleteStatement.executeUpdate("DELETE FROM roosterwijzigingen.leerlingen WHERE macadres = '" + macAddressToDatabase(macAdres) + "';");
+	    deleteStatement.executeUpdate("DELETE FROM roosterwijzigingen.leerlingen WHERE macadres = '" + macAddressToDatabase(macAddress) + "';");
 	}
     }
 
     /**
      * Zoekt het leerlingnummer op van de leerling met het gegeven MAC-adres.
      *
-     * @param macAdres het MAC-adres van de leerling
+     * @param macAddress het MAC-adres van de leerling
      * @return het leerlingnummer van de eigenaar van het gegeven MAC-adres, of
      * 0 als het adres niet geregistreerd is
      * @throws SQLException als er geen toegang tot de database verkregen kon
@@ -90,9 +90,9 @@ public class RoosterwijzigingenSQL {
      * @throws ClassNotFoundException als het stuurprogramma voor de MySQL
      * server niet gevonden kon worden
      */
-    public int getLeerlingnummer(String macAdres) throws SQLException, ClassNotFoundException {
+    public int getStudentID(String macAddress) throws SQLException, ClassNotFoundException {
 
-	macAdres = macAddressToDatabase(macAdres);
+	macAddress = macAddressToDatabase(macAddress);
 
 	int result;
 
@@ -100,9 +100,9 @@ public class RoosterwijzigingenSQL {
 	Statement updateStatement;
 	try (Statement selectStatement = mySQLManager.getConnection().createStatement()) {
 	    resultSet = selectStatement
-		    .executeQuery("SELECT leerlingnummer FROM roosterwijzigingen.leerlingen WHERE macadres = '" + macAdres + "';");
+		    .executeQuery("SELECT leerlingnummer FROM roosterwijzigingen.leerlingen WHERE macadres = '" + macAddress + "';");
 	    updateStatement = mySQLManager.getConnection().createStatement();
-	    updateStatement.executeUpdate("UPDATE roosterwijzigingen.leerlingen SET laatstingelogd=now() WHERE macadres='" + macAdres + "';");
+	    updateStatement.executeUpdate("UPDATE roosterwijzigingen.leerlingen SET laatstingelogd=now() WHERE macadres='" + macAddress + "';");
 	    if (resultSet.next()) {
 		result = resultSet.getInt("leerlingnummer");
 	    } else {
@@ -121,15 +121,15 @@ public class RoosterwijzigingenSQL {
     /**
      * Geeft aan of een MAC-adres al gekoppeld is aan een leerling.
      *
-     * @param macAdres het MAC-adres dat opgezocht moet worden
+     * @param macAddress het MAC-adres dat opgezocht moet worden
      * @return true als het MAC-adres geregistreerd is; anders false
      * @throws SQLException als er geen toegang tot de database verkregen kon
      * worden
      * @throws ClassNotFoundException als het stuurprogramma voor de MySQL
      * server niet gevonden kon worden
      */
-    public boolean macAddressIsRegistered(String macAdres) throws SQLException, ClassNotFoundException {
-	return getLeerlingnummer(macAdres) != 0;
+    public boolean macAddressIsRegistered(String macAddress) throws SQLException, ClassNotFoundException {
+	return getStudentID(macAddress) != 0;
     }
 
     /**

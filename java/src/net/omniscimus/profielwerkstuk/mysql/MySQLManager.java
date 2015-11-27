@@ -15,7 +15,7 @@ import net.omniscimus.profielwerkstuk.configuration.ConfigValueCache;
 public class MySQLManager {
 
     private final SchoolSQL schoolSQL;
-    private final RoosterwijzigingenSQL roosterwijzigingenSQL;
+    private final ScheduleChangesSQL scheduleChangesSQL;
     private final DatabaseLink databaseLink;
 
     /**
@@ -28,8 +28,8 @@ public class MySQLManager {
      */
     public MySQLManager() throws SQLException, ClassNotFoundException {
 	schoolSQL = new SchoolSQL(this);
-	roosterwijzigingenSQL = new RoosterwijzigingenSQL(this);
-	databaseLink = new DatabaseLink(roosterwijzigingenSQL, schoolSQL);
+	scheduleChangesSQL = new ScheduleChangesSQL(this);
+	databaseLink = new DatabaseLink(scheduleChangesSQL, schoolSQL);
 
 	openConnection();
     }
@@ -53,12 +53,12 @@ public class MySQLManager {
     }
 
     /**
-     * Geeft de RoosterwijzigingenSQL die dit programma gebruikt.
+     * Geeft de ScheduleChangesSQL die dit programma gebruikt.
      *
-     * @return de te gebruiken RoosterwijzigingenSQL
+     * @return de te gebruiken ScheduleChangesSQL
      */
-    public RoosterwijzigingenSQL getRoosterwijzigingenSQL() {
-	return roosterwijzigingenSQL;
+    public ScheduleChangesSQL getScheduleChangesSQL() {
+	return scheduleChangesSQL;
     }
 
     private Connection connection;

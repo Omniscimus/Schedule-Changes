@@ -97,7 +97,7 @@ public class RegisterFrame extends JFrame {
 	try {
 	    if (!currentlyDisplayedIPs.contains(ipAddress)
 		    && !uiManager.getRoosterwijzigingen().getMySQLManager()
-		    .getRoosterwijzigingenSQL().macAddressIsRegistered(macAddress)) {
+		    .getScheduleChangesSQL().macAddressIsRegistered(macAddress)) {
 
 		JButton button = new JButton();
 		button.setText("<html><center>" + ipAddress + "</center></html>");

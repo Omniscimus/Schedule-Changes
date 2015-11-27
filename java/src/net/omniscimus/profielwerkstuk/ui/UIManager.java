@@ -8,7 +8,7 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import net.omniscimus.profielwerkstuk.Roosterwijzigingen;
+import net.omniscimus.profielwerkstuk.ScheduleChanges;
 import net.omniscimus.profielwerkstuk.EventAnnouncer;
 import net.omniscimus.profielwerkstuk.configuration.ConfigValueCache;
 
@@ -19,25 +19,25 @@ import net.omniscimus.profielwerkstuk.configuration.ConfigValueCache;
  */
 public class UIManager {
 
-    private final Roosterwijzigingen rw;
+    private final ScheduleChanges sc;
 
     /**
      * Maakt een nieuwe UIManager.
      *
-     * @param rw de basis van dit programma
+     * @param sc de basis van dit programma
      */
-    public UIManager(Roosterwijzigingen rw) {
-	this.rw = rw;
+    public UIManager(ScheduleChanges sc) {
+	this.sc = sc;
     }
 
     /**
      * Geeft het basispunt voor dit programma, waar o.a. de SQL sectie
      * opgevraagd kan worden.
      *
-     * @return de Roosterwijzigingen instance die dit programma aanstuurt
+     * @return de ScheduleChanges instance die dit programma aanstuurt
      */
-    public Roosterwijzigingen getRoosterwijzigingen() {
-	return rw;
+    public ScheduleChanges getRoosterwijzigingen() {
+	return sc;
     }
 
     private UIListener uiListener;
@@ -64,7 +64,7 @@ public class UIManager {
      * Laadt de User Interface; laat het homescreen zien.
      */
     public void load() {
-	uiListener = new UIListener(rw, this);
+	uiListener = new UIListener(sc, this);
 	EventAnnouncer.registerListener(uiListener);
 	showHomescreen();
     }

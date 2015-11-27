@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class DatabaseLink {
 
-    private final RoosterwijzigingenSQL rwSQL;
+    private final ScheduleChangesSQL scSQL;
     private final SchoolSQL sSQL;
 
     /**
@@ -21,8 +21,8 @@ public class DatabaseLink {
      * @param sSQL het toegangspunt voor de database die door school geleverd
      * wordt
      */
-    public DatabaseLink(RoosterwijzigingenSQL rwSQL, SchoolSQL sSQL) {
-	this.rwSQL = rwSQL;
+    public DatabaseLink(ScheduleChangesSQL rwSQL, SchoolSQL sSQL) {
+	this.scSQL = rwSQL;
 	this.sSQL = sSQL;
     }
 
@@ -38,7 +38,7 @@ public class DatabaseLink {
      */
     public String getNameByMACAddress(String mac)
 	    throws SQLException, ClassNotFoundException {
-	return sSQL.getStudentName(rwSQL.getLeerlingnummer(mac));
+	return sSQL.getStudentName(scSQL.getStudentID(mac));
     }
 
     /**
@@ -53,7 +53,7 @@ public class DatabaseLink {
      */
     public ArrayList<String> getSchoolClassesByMACAddress(String mac)
 	    throws SQLException, ClassNotFoundException {
-	return sSQL.getSchoolClasses(rwSQL.getLeerlingnummer(mac));
+	return sSQL.getSchoolClasses(scSQL.getStudentID(mac));
     }
 
 }

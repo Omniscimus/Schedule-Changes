@@ -91,7 +91,7 @@ public class ScheduleFrame extends JFrame {
 	this.identity = newIdentity;
 	this.macAddress = newMACAddress;
 	this.studentID = uiManager.getRoosterwijzigingen().getMySQLManager()
-		.getRoosterwijzigingenSQL().getLeerlingnummer(macAddress);
+		.getScheduleChangesSQL().getStudentID(macAddress);
     }
 
     private JButton changeRegistration;

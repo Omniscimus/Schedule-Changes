@@ -30,11 +30,11 @@ public class PingableIPsProducer implements Runnable {
 	this.routerIPBytes = routerIP.getAddress();
     }
 
-    private volatile boolean running;
+    private volatile boolean running = true;
 
     @Override
     public void run() {
-
+	
 	while (running) {
 	    for (int i = 1; i < 256; i++) {
 		if (i != routerIPBytes[3]) {

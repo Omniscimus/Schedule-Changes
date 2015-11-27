@@ -36,7 +36,7 @@ public class PingableIPsConsumer implements Runnable {
 	this.pingerPool = Executors.newCachedThreadPool();
     }
 
-    private volatile boolean running;
+    private volatile boolean running = true;
     private List<Future<String>> pingResults;
 
     @Override

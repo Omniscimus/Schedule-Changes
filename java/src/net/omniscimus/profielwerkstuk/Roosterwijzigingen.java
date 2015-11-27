@@ -48,11 +48,21 @@ public class Roosterwijzigingen {
     }
 
     /**
-     * Main method van de class, aangeroepen als het programma start.
+     * Main method van de class, aangeroepen als het programma start.<br>
+     * Flags:<br>
+     * <li>-n: print beschikbare network interfaces en sluit af</li>
      *
      * @param args de command-line arguments
      */
     public static void main(String[] args) {
+	for (String arg : args) {
+	    switch (arg) {
+		case "-n":
+		    NetworkManager.printNetworkInterfaces();
+		    System.exit(0);
+		    break;
+	    }
+	}
 	new Roosterwijzigingen().initiate();
     }
 
@@ -110,7 +120,7 @@ public class Roosterwijzigingen {
 
     /**
      * Stopt het programma.
-     * 
+     *
      * @param force true als het programma onmiddelijk moet worden afgesloten;
      * anders false
      */

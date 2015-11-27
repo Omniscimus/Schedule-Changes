@@ -4,6 +4,8 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.omniscimus.profielwerkstuk.Roosterwijzigingen;
 import net.omniscimus.profielwerkstuk.configuration.ConfigValueCache;
 
@@ -96,6 +98,39 @@ public class NetworkManager {
 	    }
 	}
 
+    }
+
+    /**
+     * Print informatie over alle beschikbare netwerkinterfaces.
+     */
+    public static void printNetworkInterfaces() {
+	try {
+	    System.out.println("Beschikbare netwerkinterfaces:\n");
+	    Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+	    while (networkInterfaces.hasMoreElements()) {
+		NetworkInterface interfac = networkInterfaces.nextElement();
+		if (interfac.isUp()) {
+		    Enumeration<InetAddress> ips = interfac.getInetAddresses();
+		    while (ips.hasMoreElements()) {
+			InetAddress aiz = ips.nextElement();
+			System.out.println("hostName: " + aiz.getHostName());
+			System.out.println("hostAddress: " + aiz.getHostAddress());
+		    }
+		    byte[] address = interfac.getHardwareAddress();
+		    if (address != null) {
+			System.out.print("MAC-address: ");
+			for (byte b : address) {
+			    System.out.print(b);
+			}
+			System.out.println();
+		    }
+		    System.out.println("Interface name: " + interfac.getName());
+		}
+		System.out.println();
+	    }
+	} catch (SocketException ex) {
+	    Logger.getLogger(NetworkManager.class.getName()).log(Level.SEVERE, null, ex);
+	}
     }
 
 }

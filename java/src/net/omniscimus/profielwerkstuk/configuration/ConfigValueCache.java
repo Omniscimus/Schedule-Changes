@@ -182,23 +182,23 @@ public class ConfigValueCache {
     static void setSQLPassword(String newSQLPassword) {
 	sqlPassword = newSQLPassword;
     }
-    
+
     private static int adminCode;
-    
+
     /**
      * Geeft de admin code die gebruikt kan worden om het programma af te
      * sluiten.
-     * 
+     *
      * @return de admin code uit het configuratiebestand
      */
     public static int getAdminCode() {
 	return adminCode;
     }
-    
+
     /**
      * Verandert de admin code die gebruikt kan worden om het programma af te
      * sluiten.
-     * 
+     *
      * @param newAdminCode de nieuwe admin code
      */
     static void setAdminCode(int newAdminCode) {

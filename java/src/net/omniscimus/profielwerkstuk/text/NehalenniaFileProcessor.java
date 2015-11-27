@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 /**
  * Verwerker voor het HTML bestand met roosterwijzigingen.
- * 
+ *
  * @author omniscimus
  */
 public class NehalenniaFileProcessor {

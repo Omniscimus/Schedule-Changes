@@ -25,3 +25,6 @@ mysql-hostname: localhost
 mysql-port: 3306
 mysql-username: root
 mysql-password: 
+
+# De code die ingetypt of gescand kan worden om het programma af te sluiten:
+admin-code: 123456

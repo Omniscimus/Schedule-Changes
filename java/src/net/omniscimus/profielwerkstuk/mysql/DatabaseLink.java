@@ -40,10 +40,10 @@ public class DatabaseLink {
 	    throws SQLException, ClassNotFoundException {
 	return sSQL.getStudentName(rwSQL.getLeerlingnummer(mac));
     }
-    
+
     /**
      * Zoekt de klassen bij de leerling met het gegeven MAC-adres.
-     * 
+     *
      * @param mac het MAC-adres van een device van de leerling
      * @return een lijst met klassen waar de leerling toe behoort
      * @throws SQLException als er geen toegang tot de database verkregen kon
@@ -51,7 +51,7 @@ public class DatabaseLink {
      * @throws ClassNotFoundException als het stuurprogramma voor de MySQL
      * server niet gevonden kon worden
      */
-    public ArrayList<String> getSchoolClassesByMACAddress(String mac) 
+    public ArrayList<String> getSchoolClassesByMACAddress(String mac)
 	    throws SQLException, ClassNotFoundException {
 	return sSQL.getSchoolClasses(rwSQL.getLeerlingnummer(mac));
     }

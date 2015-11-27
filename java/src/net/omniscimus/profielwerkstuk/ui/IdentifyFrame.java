@@ -24,6 +24,7 @@ import net.omniscimus.profielwerkstuk.mysql.MySQLManager;
  * @author omniscimus
  */
 public class IdentifyFrame extends JFrame {
+
     private static final long serialVersionUID = 1L;
 
     private final UIManager uiManager;
@@ -40,7 +41,7 @@ public class IdentifyFrame extends JFrame {
 	this.setExtendedState(Frame.MAXIMIZED_BOTH);
 	initComponents();
     }
-    
+
     private final DocumentListener textFieldListener = new DocumentListener() {
 	private static final long serialVersionUID = 1L;
 

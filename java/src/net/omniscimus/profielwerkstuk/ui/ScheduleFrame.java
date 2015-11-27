@@ -53,6 +53,17 @@ public class ScheduleFrame extends JFrame {
     private String identity;
     private String macAddress;
 
+    /**
+     * Verandert de leerling voor wie roosterwijzigingen getoond moeten worden.
+     *
+     * @param studentID het leerlingnummer van de nieuwe leerling
+     * @return false als de opgegeven leerling niet gevonden kon worden; anders
+     * true
+     * @throws SQLException als er geen toegang tot de database verkregen kon
+     * worden
+     * @throws ClassNotFoundException als het stuurprogramma voor de MySQL
+     * server niet gevonden kon worden
+     */
     public boolean setIdentity(int studentID)
 	    throws SQLException, ClassNotFoundException {
 	macAddress = null;

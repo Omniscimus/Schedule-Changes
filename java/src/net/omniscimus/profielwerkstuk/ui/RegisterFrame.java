@@ -28,7 +28,7 @@ public class RegisterFrame extends JFrame {
     /**
      * Maakt een nieuwe RegisterFrame.
      *
-     * @param uiManager
+     * @param uiManager de manager van deze Frame
      */
     public RegisterFrame(UIManager uiManager) {
 	this.uiManager = uiManager;

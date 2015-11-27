@@ -22,8 +22,8 @@ public class CommandOutputProcessor {
      *
      * @param ips een lijst met IP-adressen waar MAC-adressen bij moeten worden
      * gevonden
-     * @return een Map<String, String> waarbij de key het IP-adres is en de
-     * value het MAC-adres
+     * @return een Map&lt;String, String&gt; waarbij de key het IP-adres is en
+     * de value het MAC-adres
      */
     public static Map<String, String> getMACAddresses(ArrayList<String> ips) {
 

@@ -26,7 +26,7 @@ public class ScheduleChangesCache {
     /**
      * Bewaart een nieuwe algemene roosterwijziging.
      *
-     * @param scheduleChange
+     * @param scheduleChange de roosterwijziging die bewaard moet worden
      */
     public void store(String scheduleChange) {
 	generalChanges.add(scheduleChange);

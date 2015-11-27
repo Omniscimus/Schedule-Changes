@@ -140,7 +140,7 @@ public class SchoolSQL {
      * Zoekt alle verschillende mogelijke klassen op waar een leerling in kan
      * zitten.
      *
-     * @return
+     * @return een lijst met alle bestaande klassen
      * @throws SQLException als er geen toegang tot de database verkregen kon
      * worden
      * @throws ClassNotFoundException als het stuurprogramma voor de MySQL

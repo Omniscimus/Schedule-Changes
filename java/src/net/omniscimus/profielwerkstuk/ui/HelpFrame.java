@@ -1,8 +1,6 @@
 package net.omniscimus.profielwerkstuk.ui;
 
 import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
 
 /**
  * Dit frame geeft een aantal instructies weer voor gebruikers van het apparaat.
@@ -350,7 +348,7 @@ public class HelpFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        uiManager.showHomescreen();
+	uiManager.showHomescreen();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

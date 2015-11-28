@@ -1,7 +1,60 @@
 
-.login {
+/* Login page items */
+
+.login {  /* The login panel */
   padding: 1em;
   background-color: #0a4063;
   color: white;
   box-shadow: 0px 5px 0px 0px #2199e8;
+}
+
+.loginBackground {  /* The gray area behind the login panel */
+  /* Position the object a bit down on the page */
+  position: relative;
+  top: 25%;
+  background-color: #eeeeee;
+  box-shadow: 0px 5px 0px 0px #eeeeee;
+}
+
+/* Schedule-change page items */
+
+.messageItem {
+  max-width: 100%;
+  height: auto;
+  margin-left: 1em;
+}
+
+.general {}
+.specific {}
+
+.messageItem .general {
+  border-left: 5px solid #008f44;
+}
+
+.messageItem .specific {
+  border-left: 5px solid #0fa1ff;
+}
+
+.messageItem .warning {
+  border-left: 5px solid #ff4100;
+}
+
+.top-bar {
+  background-color: #0a4063;
+  color: white;
+  padding: 0.5em;
+}
+
+.top-bar .title {
+  height: 45px;
+  font-size: 30px;
+  margin-bottom: 5px;
+}
+
+.top-bar .button {
+  height: 45px;
+}
+
+.top-bar .button-group {
+  margin-bottom: 5px;
 }

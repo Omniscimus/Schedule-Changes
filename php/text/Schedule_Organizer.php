@@ -75,7 +75,7 @@ class Schedule_Organizer {
                     array_push($this->general_changes, $schedule_change);
                 } else {
                     // Bewaar in klas-specifieke array
-                    if ($this->changes_by_school_class[$school_class] === NULL) {
+                    if (!array_key_exists($school_class, $this->changes_by_school_class)) {
                         $this->changes_by_school_class[$school_class] = [];
                     }
                     array_push($this->changes_by_school_class[$school_class], $schedule_change);

@@ -76,7 +76,7 @@
     <zipfileset src="${dist.jar}" excludes="META-INF/*" />
     <zipfileset src="lib/mysql-connector-java-5.1.37-bin.jar" excludes="META-INF/*" />
     <manifest>
-      <attribute name="Main-Class" value="net.omniscimus.profielwerkstuk.Roosterwijzigingen"/>
+      <attribute name="Main-Class" value="net.omniscimus.profielwerkstuk.ScheduleChanges"/>
     </manifest>
   </jar>
 </target>

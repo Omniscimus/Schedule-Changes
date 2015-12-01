@@ -45,12 +45,6 @@ public class ConfigurationManager {
 	    while ((line = br.readLine()) != null) {
 		if (line.startsWith("hotspot-interface")) {
 		    ConfigValueCache.setHotspotInterface(line.replace("hotspot-interface: ", ""));
-		} else if (line.startsWith("scan-delay")) {
-		    try {
-			ConfigValueCache.setScanDelay(Long.parseLong(line.replace("scan-delay: ", "")));
-		    } catch (NumberFormatException e) {
-			scheduleChanges.shutdown("Kon scan-delay niet correct lezen uit de config! (" + line + ")", false);
-		    }
 		} else if (line.startsWith("ping-timeout")) {
 		    ConfigValueCache.setPingTimeout(Integer.parseInt(line.replace("ping-timeout: ", "")));
 		} else if (line.startsWith("interaction-timeout")) {

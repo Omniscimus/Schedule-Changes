@@ -47,8 +47,9 @@ public class CommandOutputProcessor {
     // 1 of 2 characters en dan een dubbele punt, dat 5 keer, dan nog eens 1 of 2 characters.
     // characters moeten ofwel a-f zijn, ofwel A-F, ofwel 0-9
     private static final Pattern macPattern = Pattern.compile("([a-fA-F0-9][a-fA-F0-9]?:){5}?[a-fA-F0-9][a-fA-F0-9]?");
+    private static final Pattern windowsMACPattern = Pattern.compile("([a-fA-F0-9][a-fA-F0-9]?-){5}?[a-fA-F0-9][a-fA-F0-9]?");
     // drie keer iets van 1-255 met een punt erachter, daarna nog een keer zonder punt.
-    private static final Pattern ipPattern = Pattern.compile("(([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])\\\\.){3}?([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])");
+    private static final Pattern ipPattern = Pattern.compile("(\\d{1,3}?\\.){3}\\d\\d?\\d?");
 
     /**
      * Zoek het MAC-adres bij een IP-adres.
@@ -108,16 +109,17 @@ public class CommandOutputProcessor {
 	String line;
 	while ((line = commandOutputReader.readLine()) != null) {
 	    Matcher ipMatcher = ipPattern.matcher(line);
-	    ipMatcher.find();
-	    String foundIP = ipMatcher.group();
-	    if (foundIP != null && foundIP.equals(ip)) {
-		Matcher macMatcher = macPattern.matcher(line);
-		macMatcher.find();
-		String mac = macMatcher.group();
-		if (mac.equals("")) {
-		    return null;
-		} else {
-		    return mac;
+	    if (ipMatcher.find()) {
+		String foundIP = ipMatcher.group();
+		if (foundIP != null && foundIP.equals(ip)) {
+		    Matcher macMatcher = windowsMACPattern.matcher(line);
+		    macMatcher.find();
+		    String mac = macMatcher.group();
+		    if (mac.equals("")) {
+			return null;
+		    } else {
+			return mac;
+		    }
 		}
 	    }
 	}

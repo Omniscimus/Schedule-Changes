@@ -114,11 +114,15 @@ public class CommandOutputProcessor {
 		if (foundIP != null && foundIP.equals(ip)) {
 		    Matcher macMatcher = windowsMACPattern.matcher(line);
 		    macMatcher.find();
-		    String mac = macMatcher.group();
-		    if (mac.equals("")) {
+		    try {
+			String mac = macMatcher.group();
+			if (mac.equals("")) {
+			    return null;
+			} else {
+			    return mac;
+			}
+		    } catch (Exception e) {
 			return null;
-		    } else {
-			return mac;
 		    }
 		}
 	    }

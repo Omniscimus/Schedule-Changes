@@ -25,7 +25,7 @@ public class HostPinger implements Callable<String> {
     public final String call() {
 	try {
 	    if (ipToPing.isReachable(timeout)) {
-		return ipToPing.getHostName();
+		return ipToPing.getHostAddress();
 	    }
 	} catch (ConnectException ignored) {
 	} catch (IOException ex) {

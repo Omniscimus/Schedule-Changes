@@ -104,7 +104,7 @@ public class MySQLManager {
 	    if (connection != null && !connection.isClosed() && connection.isValid(3)) {
 		connection.close();
 	    }
-	} catch (SQLException ex) {
+	} catch (Exception ex) {
 	    Logger.getLogger(MySQLManager.class.getName()).log(Level.SEVERE, null, ex);
 	}
     }

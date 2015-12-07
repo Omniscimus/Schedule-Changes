@@ -52,9 +52,11 @@ public class EventAnnouncer {
 	if (macListeners != null && !macListeners.isEmpty()) {
 	    try {
 		String mac = CommandOutputProcessor.getMACAddressByIP(ip);
-		macListeners.stream().forEach((listener) -> {
-		    listener.onMACAddressUpdate(ip, mac);
-		});
+		if (mac != null) {
+		    macListeners.stream().forEach((listener) -> {
+			listener.onMACAddressUpdate(ip, mac);
+		    });
+		}
 	    } catch (IOException ex) {
 		Logger.getLogger(EventAnnouncer.class.getName()).log(Level.SEVERE, null, ex);
 	    }

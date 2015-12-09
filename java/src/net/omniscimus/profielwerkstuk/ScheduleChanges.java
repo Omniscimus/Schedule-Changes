@@ -50,7 +50,9 @@ public class ScheduleChanges {
     /**
      * Main method van de class, aangeroepen als het programma start.<br>
      * Flags:<br>
+     * <ul>
      * <li>-n: print beschikbare network interfaces en sluit af</li>
+     * </ul>
      *
      * @param args de command-line arguments
      */

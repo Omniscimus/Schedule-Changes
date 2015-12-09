@@ -293,7 +293,7 @@ class HomescreenTimerTask extends TimerTask {
     /**
      * Maakt een nieuwe HomescreenTimerTask.
      *
-     * @param uiManager
+     * @param uiManager de UIManager die deze HomescreenTimerTask maakt
      */
     HomescreenTimerTask(UIManager uiManager) {
 	this.uiManager = uiManager;

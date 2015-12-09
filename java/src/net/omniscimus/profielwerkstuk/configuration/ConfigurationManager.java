@@ -77,6 +77,9 @@ public class ConfigurationManager {
      * bestaat.
      *
      * @return het bestand met de configuratiewaarden
+     * @throws IOException als het doelbestand niet geopend kon worden
+     * @throws URISyntaxException als het bestand in het .jar bestand niet
+     * geopend kan worden
      */
     private File getConfigFile() throws IOException, URISyntaxException {
 

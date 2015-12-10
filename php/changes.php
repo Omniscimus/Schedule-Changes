@@ -25,7 +25,7 @@ if (is_numeric($_GET["studentID"]) && strlen($_GET["studentID"]) === 6) {
         <meta charset="UTF-8">
         <title>Persoonlijke wijzigingen</title>
         <!-- Foundation and custom stylesheets -->
-        <link rel="stylesheet" type="text/css" href="foundation/css/foundation.css">
+        <link rel="stylesheet" type="text/css" href="foundation/css/foundation.min.css">
         <link rel="stylesheet" type="text/css" href="foundation/css/schedule-changes.css">
     </head>
     <body>

@@ -133,7 +133,6 @@ public class NehalenniaFileProcessor {
      * @return een Stream met de leesbare substrings van paragraphTags
      */
     public static Stream<String> convertHTMLToText(ArrayList<String> paragraphTags) {
-	ArrayList<String> linesWithoutHTML = new ArrayList<>();
 	// Regular Expression:
 	// het mag geen < of > bevatten maar moet wel tussen > en < staan
 	Pattern pattern = Pattern.compile(">[^<>]+<");

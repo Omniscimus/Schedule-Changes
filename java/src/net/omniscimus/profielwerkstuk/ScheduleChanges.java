@@ -25,11 +25,6 @@ public class ScheduleChanges {
     private UIManager uiManager;
 
     /**
-     * Een statisch toegangspunt voor dit programma.
-     */
-    public static ScheduleChanges sc;
-
-    /**
      * Geeft de DownloadScheduler van dit programma.
      *
      * @return de DownloadScheduler die dit programma gebruikt
@@ -72,8 +67,6 @@ public class ScheduleChanges {
      * Start het programma.
      */
     public void initiate() {
-
-	sc = this;
 
 	// Load de config values.
 	configurationManager = new ConfigurationManager(this);

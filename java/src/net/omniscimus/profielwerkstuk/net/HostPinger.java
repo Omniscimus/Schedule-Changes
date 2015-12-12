@@ -8,6 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * De HostPinger is de class die het pingen uitvoert. Dit gebeurt doorgaans in
+ * de Consumer thread.
  *
  * @author omniscimus
  */

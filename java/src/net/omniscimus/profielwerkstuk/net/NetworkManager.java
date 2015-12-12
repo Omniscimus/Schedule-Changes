@@ -112,19 +112,19 @@ public class NetworkManager {
 		if (interfac.isUp()) {
 		    Enumeration<InetAddress> ips = interfac.getInetAddresses();
 		    while (ips.hasMoreElements()) {
-			InetAddress aiz = ips.nextElement();
-			System.out.println("hostName: " + aiz.getHostName());
-			System.out.println("hostAddress: " + aiz.getHostAddress());
+			InetAddress ip = ips.nextElement();
+			System.out.println("hostName: " + ip.getHostName());
+			System.out.println("hostAddress: " + ip.getHostAddress());
 		    }
 		    byte[] address = interfac.getHardwareAddress();
 		    if (address != null) {
-			System.out.print("MAC-address: ");
+			System.out.print("MAC-addres: ");
 			for (byte b : address) {
 			    System.out.print(b);
 			}
 			System.out.println();
 		    }
-		    System.out.println("Interface name: " + interfac.getName());
+		    System.out.println("Interface naam: " + interfac.getName());
 		}
 		System.out.println();
 	    }

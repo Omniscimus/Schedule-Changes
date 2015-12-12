@@ -1,10 +1,6 @@
 package net.omniscimus.profielwerkstuk;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.omniscimus.profielwerkstuk.util.CommandOutputProcessor;
 
 /**
  * Verspreidt bepaalde gebeurtenissen in het programma naar de juiste Listeners.
@@ -47,19 +43,13 @@ public class EventAnnouncer {
      * verwittigt alle MACAddressListeners van de update.
      *
      * @param ip het nieuwe IP-adres dat gedetecteerd is in een scan
+     * @param mac het MAC-adres dat bij het IP-adres ip hoort
      */
-    public static void detectedIP(String ip) {
+    public static void detectedHost(String ip, String mac) {
 	if (macListeners != null && !macListeners.isEmpty()) {
-	    try {
-		String mac = CommandOutputProcessor.getMACAddressByIP(ip);
-		if (mac != null) {
-		    macListeners.stream().forEach((listener) -> {
-			listener.onMACAddressUpdate(ip, mac);
-		    });
-		}
-	    } catch (IOException ex) {
-		Logger.getLogger(EventAnnouncer.class.getName()).log(Level.SEVERE, null, ex);
-	    }
+	    macListeners.stream().forEach((listener) -> {
+		listener.onMACAddressUpdate(ip, mac);
+	    });
 	}
     }
 

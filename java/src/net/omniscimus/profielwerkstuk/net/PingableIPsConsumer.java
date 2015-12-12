@@ -1,5 +1,6 @@
 package net.omniscimus.profielwerkstuk.net;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.omniscimus.profielwerkstuk.EventAnnouncer;
 import net.omniscimus.profielwerkstuk.configuration.ConfigValueCache;
+import net.omniscimus.profielwerkstuk.util.CommandOutputProcessor;
 
 /**
  * Dit is de taak die uitgevoerd moet worden door de Consumer thread. Hij pingt
@@ -81,10 +83,13 @@ public class PingableIPsConsumer implements Runnable {
 		}
 		String resultIP = task.get();
 		if (resultIP != null) {
-		    EventAnnouncer.detectedIP(resultIP);
+		    String resultMAC = CommandOutputProcessor.getMACAddressByIP(resultIP);
+		    if (resultMAC != null) {
+			EventAnnouncer.detectedHost(resultIP, resultMAC);
+		    }
 		}
 		pingResults.remove(0);
-	    } catch (InterruptedException | ExecutionException ex) {
+	    } catch (InterruptedException | ExecutionException | IOException ex) {
 		Logger.getLogger(PingableIPsConsumer.class.getName()).log(Level.SEVERE, null, ex);
 	    }
 	}

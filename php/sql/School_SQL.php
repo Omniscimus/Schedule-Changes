@@ -44,7 +44,7 @@ class School_SQL {
     /**
      * Geeft een lijst met klassen waar de leerling in zit.
      * 
-     * @param type $studentID
+     * @param int $studentID het leerlingnummer van de betreffende leerling
      */
     function getSchoolClasses($studentID) {
         $statement = $this->mySQL_manager->getConnection()->

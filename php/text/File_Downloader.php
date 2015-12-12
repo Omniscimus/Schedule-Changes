@@ -5,7 +5,8 @@ require_once 'text/File_Manager.php';
 require_once 'util/String_Util.php';
 
 /**
- * Description of File_Downloader
+ * Deze class bevat code die het downloaden van de bestanden met
+ * roosterwijzigingen regelt.
  *
  * @author omniscimus
  */

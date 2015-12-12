@@ -19,7 +19,13 @@ class MySQL_Manager {
     function __construct() {
         $this->school_SQL = new School_SQL($this);
     }
-    
+
+    /**
+     * Geeft de instance van School_SQL die gebruikt kan worden voor het
+     * opvragen van gegevens uit de schooldatabase.
+     * 
+     * @return School_SQL een bruikbaar toegangspunt voor de schooldatabase
+     */
     function getSchoolSQL() {
         return $this->school_SQL;
     }

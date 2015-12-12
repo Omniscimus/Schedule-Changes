@@ -1,4 +1,5 @@
 <?php
+namespace ScheduleChanges;
 
 require_once 'text/File_Processor.php';
 require_once 'text/Schedule_Organizer.php';

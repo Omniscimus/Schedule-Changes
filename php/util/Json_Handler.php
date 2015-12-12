@@ -1,4 +1,5 @@
 <?php
+namespace ScheduleChanges;
 
 /**
  * Verzorgt het schrijven naar en lezen van data naar bestanden in json-formaat.

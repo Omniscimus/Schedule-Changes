@@ -1,4 +1,5 @@
 <?php
+namespace ScheduleChanges;
 
 /**
  * Verzorgt de communicatie met de SQL database die geleverd wordt door de

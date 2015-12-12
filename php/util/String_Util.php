@@ -1,4 +1,5 @@
 <?php
+namespace ScheduleChanges;
 
 /**
  * Deze class biedt een aantal functies die uitgevoerd kunnen worden op een

@@ -1,4 +1,5 @@
 <?php
+namespace ScheduleChanges;
 
 require_once 'text/File_Manager.php';
 require_once 'util/String_Util.php';

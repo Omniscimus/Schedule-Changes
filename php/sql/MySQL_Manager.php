@@ -1,4 +1,5 @@
 <?php
+namespace ScheduleChanges;
 
 require_once 'School_SQL.php';
 

@@ -1,4 +1,6 @@
 <?php
+namespace ScheduleChanges;
+
 require_once 'Schedule_Changes.php';
 $config = include 'config.php';
 date_default_timezone_set($config["default_timezone"]);

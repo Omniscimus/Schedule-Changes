@@ -32,7 +32,7 @@ class File_Downloader {
                 file_put_contents($target_path, $new_file);
             }
         } else {
-            throw new Exception("Bestand niet beschikbaar.");
+            throw new \Exception("Bestand niet beschikbaar.");
         }
     }
 
@@ -59,7 +59,7 @@ class File_Downloader {
     static function deleteOldScheduleFiles() {
         $files = scandir("schedule-files" . DIRECTORY_SEPARATOR);
         foreach ($files as $file) {
-            if ($file != ".." && $file != "." && substr($file, 0, 2) < date("W")) {
+            if ($file != ".." && $file != "." && substr($file, 0, 1) < date("W")) {
                 unlink("schedule-files/" . $file);
             }
         }

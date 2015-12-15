@@ -51,7 +51,7 @@ if (is_numeric($_GET["studentID"]) && strlen($_GET["studentID"]) === 6) {
                 </div>
             </div>
         </div>
-        <div clas="row" style="margin-top: 1em;">
+        <div clas="row" style="margin: 1em 10em 1em 10em;">
         <?php
         if (isset($schedule_changes)) {
             try {
@@ -72,7 +72,7 @@ if (is_numeric($_GET["studentID"]) && strlen($_GET["studentID"]) === 6) {
                 } else {
                     echo "Je hebt geen persoonlijke roosterwijzigingen voor deze dag.";
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 echo $e->getMessage();
             }
         } else {

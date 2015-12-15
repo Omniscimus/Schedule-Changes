@@ -34,7 +34,7 @@ class Schedule_Reader {
                 $this->schedule_changes_class->file_manager->processNewScheduleChanges();
                 $general_changes = $this->getGeneralChangesFromFile();
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $general_changes = ["Er zijn nog geen roosterwijzigingen bekend voor deze dag."];
         }
         return $general_changes;
@@ -51,7 +51,7 @@ class Schedule_Reader {
     private function getGeneralChangesFromFile() {
         try {
             $general_changes = Json_Handler::readFromJsonFile($this->schedule_changes_class->file_manager->getJsonFolder() . "general.json");
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $general_changes = FALSE;
         }
         return $general_changes;
@@ -78,7 +78,7 @@ class Schedule_Reader {
                     $student_changes = array_merge($student_changes, $specific_changes[$school_class]);
                 }
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             array_push($student_changes, "Er zijn nog geen roosterwijzigingen bekend voor deze dag.");
         }
         return $student_changes;
@@ -94,7 +94,7 @@ class Schedule_Reader {
     private function getSpecificChangesFromFile() {
         try {
             $specific_changes = (array) Json_Handler::readFromJsonFile($this->schedule_changes_class->file_manager->getJsonFolder() . DIRECTORY_SEPARATOR . "specific.json");
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $specific_changes = FALSE;
         }
         return $specific_changes;

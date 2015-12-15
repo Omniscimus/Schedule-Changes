@@ -19,7 +19,7 @@ class Json_Handler {
         $json = str_replace("\u00a0", " ", json_encode($object));
         $file_handle = fopen($file, 'w');
         if ($file_handle === FALSE) {
-            throw new Exception("Kon het json-bestand niet openen.");
+            throw new \Exception("Kon het json-bestand niet openen.");
         }
         fwrite($file_handle, $json);
         fclose($file_handle);
@@ -33,7 +33,7 @@ class Json_Handler {
      */
     static function readFromJsonFile($file) {
         if (!file_exists($file)) {
-            throw new Exception("Bestand bestaat niet!");
+            throw new \Exception('Bestand bestaat niet!');
         }
         $json = file_get_contents($file);
         return json_decode($json);

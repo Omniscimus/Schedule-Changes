@@ -58,10 +58,10 @@ class MySQL_Manager {
      */
     function connect() {
         $config = include 'config.php';
-        $connection = new mysqli(
+        $connection = new \mysqli(
                 $config["mysql_hostname"], $config["mysql_username"], $config["mysql_password"], NULL, $config["mysql_port"]);
         if ($connection->connect_error) {
-            throw new Exception("Verbinden met de database is mislukt.");
+            throw new \Exception("Verbinden met de database is mislukt.");
         } else {
             $this->connection = $connection;
         }
